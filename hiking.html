@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eureka Springs Hiking Map</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous">
+  <style>
+    :root {
+      --pine: #19352a;
+      --forest: #275946;
+      --sage: #86a98b;
+      --cream: #f7f3ea;
+      --sand: #ece2d0;
+      --river: #2f7fb0;
+      --gold: #c78f37;
+      --ember: #c25e37;
+      --plum: #7b5bb7;
+      --ink: #1f2722;
+      --muted: #5a685f;
+      --card: rgba(255, 255, 255, 0.96);
+      --shadow: 0 18px 40px rgba(20, 31, 25, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #dce8df 0%, #f6f1e7 100%);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: relative;
+      z-index: 1100;
+      padding: 10px 12px;
+      background:
+        radial-gradient(circle at top right, rgba(199, 143, 55, 0.22), transparent 34%),
+        linear-gradient(135deg, var(--pine), var(--forest));
+      color: #f7f8f4;
+      box-shadow: 0 8px 24px rgba(17, 34, 27, 0.22);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 0;
+      line-height: 1.1;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .top-btn,
+    .chip {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .top-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+    }
+
+    .top-btn:active {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .chip-row {
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      right: 12px;
+      z-index: 1050;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chip-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 0 10px 24px rgba(23, 31, 26, 0.12);
+      white-space: nowrap;
+      min-height: 38px;
+    }
+
+    .chip.active {
+      background: var(--pine);
+      color: #fff;
+    }
+
+    #map {
+      flex: 1;
+      width: 100%;
+    }
+
+    .floating-note {
+      position: absolute;
+      top: 106px;
+      left: 12px;
+      right: 12px;
+      z-index: 980;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(247, 243, 234, 0.94);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .floating-note strong {
+      display: block;
+      font-size: 0.87rem;
+      margin-bottom: 3px;
+    }
+
+    .floating-note summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .floating-note summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .note-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .note-copy {
+      margin-top: 8px;
+    }
+
+    .note-toggle {
+      min-width: 22px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--forest);
+      white-space: nowrap;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 14px;
+      left: 12px;
+      z-index: 980;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size: 0.75rem;
+      line-height: 1.35;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 4px;
+    }
+
+    .legend-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .locate-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 14px;
+      z-index: 980;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+      font-size: 1.1rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sheet,
+    .modal {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 1300;
+      transform: translateY(100%);
+      transition: transform 0.28s ease;
+      background: #fff;
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -14px 32px rgba(20, 31, 25, 0.2);
+      max-height: 84vh;
+      overflow-y: auto;
+    }
+
+    .sheet.open,
+    .modal.open {
+      transform: translateY(0);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 20, 0.48);
+      z-index: 1200;
+      display: none;
+    }
+
+    .overlay.open {
+      display: block;
+    }
+
+    .handle {
+      width: 40px;
+      height: 5px;
+      border-radius: 999px;
+      background: #d9ddd8;
+      margin: 10px auto 8px;
+    }
+
+    .sheet-inner,
+    .modal-inner {
+      padding: 0 16px 28px;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      border: 0;
+      background: none;
+      color: #869088;
+      font-size: 1.7rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      background: #eef5ef;
+      color: var(--forest);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sheet h2,
+    .modal h2 {
+      font-size: 1.3rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      padding-right: 28px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .score-card {
+      border-radius: 14px;
+      background: #f3f5f2;
+      padding: 10px 10px 11px;
+    }
+
+    .score-card .label {
+      display: block;
+      color: #7a837c;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .score-card .value {
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .body-copy {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #344039;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6c776e;
+      margin-bottom: 7px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #eff2ef;
+      color: #2e3b34;
+      font-size: 0.82rem;
+    }
+
+    .callout {
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 10px;
+      font-size: 0.87rem;
+      line-height: 1.5;
+    }
+
+    .callout.good {
+      background: #edf6ef;
+      color: #224533;
+      border-left: 4px solid #4a8b5b;
+    }
+
+    .callout.warn {
+      background: #fff4e8;
+      color: #6a4222;
+      border-left: 4px solid var(--gold);
+    }
+
+    .callout.rule {
+      background: #edf5fb;
+      color: #20435c;
+      border-left: 4px solid var(--river);
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .action-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    .action-link {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--pine);
+    }
+
+    .action-link.secondary {
+      background: #dfe9e1;
+      color: var(--pine);
+    }
+
+    .list {
+      list-style: none;
+      margin-bottom: 14px;
+    }
+
+    .list li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 7px;
+      color: #344039;
+    }
+
+    .source-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .source-list li {
+      margin-bottom: 8px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    a {
+      color: var(--river);
+    }
+
+    .leaflet-control-zoom {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .leaflet-control-zoom a {
+      border: none !important;
+      border-radius: 12px !important;
+      margin-bottom: 6px !important;
+      box-shadow: 0 12px 24px rgba(20, 31, 25, 0.16) !important;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      box-shadow: 0 14px 30px rgba(20, 31, 25, 0.16);
+    }
+
+    @media (min-width: 720px) {
+      .chip-row {
+        right: auto;
+        max-width: 660px;
+      }
+
+      .floating-note {
+        right: auto;
+        max-width: 440px;
+      }
+
+      .legend {
+        left: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 0.92rem;
+        padding-top: 0;
+        text-align: center;
+      }
+
+      .top-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .top-btn {
+        padding: 7px 9px;
+        font-size: 0.74rem;
+      }
+
+      .chip-row {
+        top: 100px;
+      }
+
+      .floating-note {
+        top: 146px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <h1>Eureka Springs Hiking Map</h1>
+      <div class="top-actions">
+        <a class="top-btn" href="/Users/dfxstudio/Claude/index.html">Back to hub</a>
+        <button class="top-btn" type="button" onclick="openRules()">Rules + trail notes</button>
+        <a class="top-btn" href="/Users/dfxstudio/Claude/hiking-reading.html">Trip reading</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="chip-row" id="filterRow">
+    <button class="chip active" type="button" data-filter="all">All trails</button>
+    <button class="chip" type="button" data-filter="local">Easy local</button>
+    <button class="chip" type="button" data-filter="waterfall">Waterfalls</button>
+    <button class="chip" type="button" data-filter="views">Big views</button>
+    <button class="chip" type="button" data-filter="quiet">Quietest</button>
+    <button class="chip" type="button" data-filter="daytrip">Day trips</button>
+  </div>
+
+  <div id="map"></div>
+  <div id="mapFallback" class="floating-note" style="display:none;">
+    <strong>Map load fallback</strong>
+    The live basemap did not load in this browser. The hiking trail cards and Google Maps links below still work, and opening this file through a small local web server instead of straight from `file://` usually fixes blocked map resources.
+  </div>
+
+  <details class="floating-note" open>
+    <summary class="note-summary" onclick="toggleNoteLabel()">
+      <strong>Cabin trail note</strong>
+      <span class="note-toggle" id="noteToggleLabel">-</span>
+    </summary>
+    <div class="note-copy">
+      There does not appear to be a true signed trailhead right off your cabin road. For the closest options, I would add Blue Spring on CR 210 first, then Beaver Trail by Beaver Bridge, then a short riverside walk around Dam Site River below Beaver Dam. For classic easy Eureka hikes, Black Bass Lake, Lake Leatherwood, and the Passion Play grounds are still your best nearby picks.
+    </div>
+  </details>
+
+  <div class="legend">
+    <div class="legend-row"><span class="legend-dot" style="background:#4a8b5b"></span>Easy local trails</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#2f7fb0"></span>Waterfalls and creek walks</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#c78f37"></span>Big-view trails</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#7b5bb7"></span>Town-side trail systems</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#c25e37"></span>Your stay area</div>
+  </div>
+
+  <button class="locate-btn" type="button" onclick="locateMe()" aria-label="Find my location">◎</button>
+
+  <div class="overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="handle"></div>
+    <button class="close-btn" type="button" onclick="closeSheet()">×</button>
+    <div class="sheet-inner" id="sheetInner"></div>
+  </div>
+
+  <div class="overlay" id="rulesOverlay" onclick="closeRules(event)"></div>
+  <div class="modal" id="rulesModal">
+    <div class="handle"></div>
+    <button class="close-btn" type="button" onclick="closeRules()">×</button>
+    <div class="modal-inner">
+      <div class="eyebrow">Arkansas trail notes</div>
+      <h2>What to know before you hike</h2>
+      <p class="meta">These notes are based on current official trail and land-manager pages available on March 27, 2026. I weighted the items that matter most for your April 20-24, 2026 trip near Eureka Springs.</p>
+
+      <div class="callout rule">
+        <strong>Your simplest nearby plan</strong><br>
+        If you want low-stress trail time close to town, start with Black Bass Lake or Lake Leatherwood. If you want a memorable day trip, Lost Valley is the easiest waterfall hike, Whitaker Point is the iconic overlook, and White Rock is the quietest big-view option.
+      </div>
+
+      <ul class="list">
+        <li><strong>Lost Valley is day-use only:</strong> the National Park Service says the Lost Valley area is open for day use only, and backcountry camping is not permitted on the Lost Valley Trail.</li>
+        <li><strong>No dogs on Lost Valley:</strong> Buffalo National River's current pets page says pets are not allowed on most park trails, and Lost Valley is not one of the dog-allowed exceptions.</li>
+        <li><strong>White Rock bluff surfaces are currently restricted:</strong> the Forest Service has an active order through December 31, 2026 prohibiting people from being on the rock surface of the White Rock bluffs. Stay on the designated rim trail and overlooks instead of scrambling out onto the bluff faces.</li>
+        <li><strong>Black Bass dam and spillway are no-access areas:</strong> Eureka Springs Parks specifically notes that the dam, the area below the dam, and the spillway area are closed to access.</li>
+        <li><strong>Lake Leatherwood trails are non-motorized:</strong> Visit Eureka Springs notes that the park's trails are closed to motorized vehicles.</li>
+        <li><strong>Whitaker Point road note:</strong> the Forest Service lists the trailhead as open 24 hours and free, but the last stretch in is still a forest road. The agency also posted January 2026 weekday construction work at the trailhead that was expected through the end of February, so I would still glance at current alerts before your April trip.</li>
+        <li><strong>White River hiking is limited:</strong> near your cabin, the river corridor is much better for scenic access points and short walks than for long formal trails. Beaver Trail is the clearest actual trail close to that side of your trip.</li>
+        <li><strong>Hobbs hunting-season closures do not affect your April trip:</strong> the Arkansas State Parks closure dates listed are in November, December, and January, so Sinking Stream and Van Winkle should be a safer spring backup.</li>
+      </ul>
+
+      <div class="callout warn">
+        <strong>April reality check</strong><br>
+        Expect slick rocks, spring mud, ticks, and spotty service on the bigger drives. Bring water, do not count on cell coverage for navigation in the forest, and turn around early rather than forcing a trail after rain.
+      </div>
+
+      <div class="callout good">
+        <strong>Good beginner pacing</strong><br>
+        Black Bass Lake, Lake Leatherwood, Passion Play, and Hobbs are the easiest trails to pair with a relaxed trip day. Lost Valley is the most forgiving scenic day trip. Whitaker Point and White Rock are better once you are in the mood for a longer drive and rougher approach roads.
+      </div>
+
+      <div class="section-title">Spot-specific caution</div>
+      <ul class="list">
+        <li><strong>Black Bass Lake:</strong> no facilities on-site, and the dam / spillway area is restricted.</li>
+        <li><strong>Lake Leatherwood:</strong> the trail system is large and mixed-use, so it is easy to turn a casual walk into a longer outing than planned.</li>
+        <li><strong>Passion Play / Marble Flats:</strong> this is a multi-use trail system with bikes in the mix, so stay alert at intersections and faster downhill sections.</li>
+        <li><strong>Whitaker Point:</strong> the overlook is exposed, the trail can feel busier than it looks online, and the approach road is the bigger headache for most visitors.</li>
+        <li><strong>White Rock:</strong> the views are excellent, but this is still a cliff-edge area with an active bluff-surface closure and a pack-it-in / pack-it-out feel.</li>
+      </ul>
+
+      <div class="section-title">Official sources</div>
+      <ul class="source-list">
+        <li><a href="https://www.eurekaparks.com/parks" target="_blank" rel="noopener noreferrer">Eureka Springs Parks: Lake Leatherwood and Black Bass Lake</a></li>
+        <li><a href="https://www.visiteurekasprings.com/get-out-in-eureka-springs/" target="_blank" rel="noopener noreferrer">Visit Eureka Springs outdoor overview</a></li>
+        <li><a href="https://www.nps.gov/thingstodo/hike-the-lost-valley-trail.htm" target="_blank" rel="noopener noreferrer">NPS: Hike the Lost Valley Trail</a></li>
+        <li><a href="https://www.nps.gov/buff/planyourvisit/pets.htm" target="_blank" rel="noopener noreferrer">NPS: Buffalo National River pets page</a></li>
+        <li><a href="https://www.nps.gov/buff/planyourvisit/hiking-trails.htm" target="_blank" rel="noopener noreferrer">NPS: Buffalo National River hiking trails</a></li>
+        <li><a href="https://www.fs.usda.gov/r08/ozark-stfrancis/recreation/whitaker-point-hawksbill-crag-trailhead" target="_blank" rel="noopener noreferrer">Forest Service: Whitaker Point trailhead</a></li>
+        <li><a href="https://www.fs.usda.gov/r08/ozark-stfrancis/alerts/forest-order-white-rock-rappelling" target="_blank" rel="noopener noreferrer">Forest Service: White Rock forest order</a></li>
+        <li><a href="https://www.arkansasstateparks.com/trails/sinking-stream-trail" target="_blank" rel="noopener noreferrer">Arkansas State Parks: Sinking Stream Trail</a></li>
+        <li><a href="https://www.arkansasstateparks.com/trails/historic-van-winkle-trail" target="_blank" rel="noopener noreferrer">Arkansas State Parks: Historic Van Winkle Trail</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+  <script>
+    if (typeof L === "undefined") {
+      document.getElementById("map").style.display = "none";
+      document.getElementById("mapFallback").style.display = "block";
+      throw new Error("Leaflet failed to load.");
+    }
+
+    const map = L.map("map", {
+      center: [36.408, -93.78],
+      zoom: 11,
+      zoomControl: true
+    });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: "abcd",
+      maxZoom: 20
+    }).addTo(map);
+
+    map.zoomControl.setPosition("bottomright");
+
+    function markerIcon(color, glyph) {
+      return L.divIcon({
+        className: "",
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
+        popupAnchor: [0, -18],
+        html: `<div style="width:38px;height:38px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:17px;">${glyph}</div>`
+      });
+    }
+
+    const homeIcon = L.divIcon({
+      className: "",
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      html: '<div style="width:40px;height:40px;border-radius:50%;background:#c25e37;border:3px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;">🏡</div>'
+    });
+
+    const spots = [
+      {
+        id: "black-bass",
+        name: "Black Bass Lake trails",
+        lat: 36.3950899,
+        lng: -93.7451853,
+        color: "#4a8b5b",
+        glyph: "🥾",
+        type: "local",
+        quiet: 5,
+        easy: 4,
+        drive: "~15 min from your stay",
+        crowd: "Usually one of the calmest picks on this map",
+        chair: "Short walks and easy loop sections",
+        view: "Historic dam, clear green lake, wooded shoreline",
+        highlights: ["Short shoreline loop", "Historic stone dam", "Wildflowers in season", "Quiet picnic feel"],
+        summary: "My best match if you want an easy, low-pressure local hike that still feels pretty and tucked away.",
+        why: "Black Bass is close to town but feels quieter than most visitors expect. The local tourism pages describe a compact trail system with both easy shoreline walking and a little more bluff texture, which makes it a good first hike when you just want to stretch your legs without committing the day.",
+        beginner: "Treat this as your easiest reset trail. Park by the kiosk, stay on the obvious loop sections, and keep your expectations scenic rather than ambitious.",
+        rules: [
+          "The dam, area below the dam, and spillway are no-access areas.",
+          "There are no facilities here, so bring your own water.",
+          "Stay on the public park trails and parking areas."
+        ],
+        alerts: [
+          "This is a better quiet walk than a dramatic overlook hike.",
+          "Some sections are rockier than they look in photos."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Black+Bass+Lake%2C+Eureka+Springs%2C+AR&travelmode=driving",
+        directions: "Black Bass Lake, Eureka Springs, AR",
+        sourceLinks: [
+          { label: "Eureka Springs Parks", url: "https://www.eurekaparks.com/parks" },
+          { label: "Visit Eureka Springs Black Bass page", url: "https://www.visiteurekasprings.com/black-bass-lake-trails/" }
+        ]
+      },
+      {
+        id: "leatherwood",
+        name: "Lake Leatherwood trail hub",
+        lat: 36.4351,
+        lng: -93.7606,
+        color: "#4a8b5b",
+        glyph: "🥾",
+        type: "local",
+        quiet: 4,
+        easy: 4,
+        drive: "~15 min from your stay",
+        crowd: "Easy to spread out once you leave the main lake core",
+        chair: "Great for a short walk or longer choose-your-own loop",
+        view: "Spring-fed lake, stone dam, forested hills",
+        highlights: ["25+ miles of trails in the park", "Historic WPA stonework", "Lake views", "Flexible route lengths"],
+        summary: "This is the best all-around hiking base near Eureka Springs if you want options instead of one fixed trail.",
+        why: "The park pages consistently frame Leatherwood as the main hiking anchor near town. It gives you a scenic lake core for a short walk, but it also has enough trail mileage that you can keep going if the mood strikes.",
+        beginner: "Start near the main lake and dam area, then take one of the easier shoreline or old-roadbed style sections instead of diving straight into the longer backcountry-feeling loops.",
+        rules: [
+          "The park's trails are closed to motorized vehicles.",
+          "This is a mixed-use trail system, so expect bikers in some sections.",
+          "Use the park office or map before branching into longer loops."
+        ],
+        alerts: [
+          "Easy to accidentally turn this into a much longer hike than planned.",
+          "Ticks and slick rock are realistic spring concerns."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Lake+Leatherwood+City+Park%2C+Eureka+Springs%2C+AR&travelmode=driving",
+        directions: "Lake Leatherwood City Park, Eureka Springs, AR",
+        sourceLinks: [
+          { label: "Eureka Springs Parks", url: "https://www.eurekaparks.com/parks" },
+          { label: "Visit Eureka Springs outdoor guide", url: "https://www.visiteurekasprings.com/get-out-in-eureka-springs/" }
+        ]
+      },
+      {
+        id: "passion-play",
+        name: "Passion Play + Marble Flats trails",
+        lat: 36.4013,
+        lng: -93.7308,
+        color: "#7b5bb7",
+        glyph: "🧭",
+        type: "local",
+        quiet: 3,
+        easy: 3,
+        drive: "~20 min from your stay",
+        crowd: "Moderate near main trailheads",
+        chair: "More of a walk/trail-run stop than a sit-and-soak-in-it trailhead",
+        view: "Wooded ridges close to town",
+        highlights: ["Town-side trail system", "Good backup when you want to stay close", "Lots of route choices", "Easy to pair with other in-town plans"],
+        summary: "Good if you want a close-to-town trail fix without driving out to the national forest or Buffalo corridor.",
+        why: "Local Reddit threads keep mentioning the Passion Play grounds as one of the easiest novice-friendly places to walk near Eureka Springs, and the site itself says the trails are open sunrise to one hour after sunset.",
+        beginner: "Treat this as a local mileage trail, not a signature scenic destination. It is useful when you want a casual hike before dinner or after a slow morning.",
+        rules: [
+          "This is a multi-use trail system with bikes present.",
+          "Stick to the signed public trail network.",
+          "Trails are listed as open from sunrise to one hour after sunset."
+        ],
+        alerts: [
+          "Less of a dramatic payoff than Lost Valley or Whitaker Point.",
+          "Trail intersections can make it easy to wander if you are not watching your map."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=935+Passion+Play+Rd%2C+Eureka+Springs%2C+AR+72632&travelmode=driving",
+        directions: "935 Passion Play Rd, Eureka Springs, AR 72632",
+        sourceLinks: [
+          { label: "Great Passion Play trail page", url: "https://www.greatpassionplay.org/mountain-bike-trails.html" },
+          { label: "Visit Eureka Springs Passion Play + Marble Flats page", url: "https://www.visiteurekasprings.com/passion-play-marble-flats-biking-trails/" },
+          { label: "Local Reddit thread with novice hike suggestions", url: "https://www.reddit.com/r/eurekasprings/comments/10gfcn4/" }
+        ]
+      },
+      {
+        id: "beaver-trail",
+        name: "Beaver Trail + Beaver Bridge",
+        lat: 36.47083,
+        lng: -93.76833,
+        color: "#4a8b5b",
+        glyph: "🥾",
+        type: "local",
+        quiet: 4,
+        easy: 5,
+        drive: "~10-15 min from your stay",
+        crowd: "Usually calmer than the big destination hikes",
+        chair: "Very short scenic walk",
+        view: "White River / Table Rock water, historic suspension bridge, bluff scenery",
+        highlights: ["0.31-mile round trip", "Bridge crossing", "Quick river view stop", "Best close White River trail"],
+        summary: "This is the clearest close-to-cabin hiking add on the White River side of your trip.",
+        why: "Arkansas.com specifically says the scenic Beaver Trail trailhead is by Beaver Bridge and calls it an easy, well-maintained 0.31-mile round trip hike. That makes it the best legitimate White River-side trail I found near your cabin corridor instead of just another access-road pin.",
+        beginner: "Treat this as a scenic leg-stretcher, not a big hike. It is a great add-on if you want a river view, a quick walk, and an easy photo stop without committing much time.",
+        rules: [
+          "This is a short public trail by Beaver Bridge.",
+          "Stay on the maintained trail and watch traffic around the bridge area.",
+          "Good for a quick stop, not an all-morning hike."
+        ],
+        alerts: [
+          "The bridge area can attract sightseers even when the trail itself is quiet.",
+          "This is the best close White River trail, but it is intentionally short."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Beaver+Bridge%2C+Arkansas+187%2C+Beaver%2C+AR+72613&travelmode=driving",
+        directions: "Beaver Bridge, Arkansas 187, Beaver, AR 72613",
+        sourceLinks: [
+          { label: "Arkansas.com Beaver town page", url: "https://www.arkansas.com/beaver?city=beaver" },
+          { label: "Arkansas.com Beaver Bridge page", url: "https://www.arkansas.com/beaver/landmarks/beaver-bridge" }
+        ]
+      },
+      {
+        id: "blue-spring",
+        name: "Blue Spring Heritage Center paths",
+        lat: 36.465756,
+        lng: -93.812506,
+        color: "#4a8b5b",
+        glyph: "🥾",
+        type: "local",
+        quiet: 4,
+        easy: 5,
+        drive: "~5-10 min from your stay",
+        crowd: "Usually calmer than the marquee day trips",
+        chair: "Very easy walking paths",
+        view: "Huge spring, lagoon, bluff shelter, landscaped paths",
+        highlights: ["On CR 210", "Easy garden-style paths", "Historic bluff shelter", "Very close to your cabin"],
+        summary: "This is the closest real walk on your map, and the easiest option if you want scenery without a drive-heavy day.",
+        why: "Blue Spring is practically on your cabin road and has easy walking paths around one of the largest springs in northwest Arkansas. It is not a public trailhead in the same sense as the forest and park hikes, but it is the closest scenic walk that actually makes sense from your stay.",
+        beginner: "Treat this as a very easy scenic stroll. It works well for an arrival-day walk, a low-energy morning, or a quick outing before dinner.",
+        rules: [
+          "This is an admission-based attraction, not a free public trailhead.",
+          "Use the marked public walking paths and posted visiting hours.",
+          "The paths are easy and accessible compared with the rougher forest trails."
+        ],
+        alerts: [
+          "This is the closest useful hike-style stop, but it is private and ticketed.",
+          "Best fit when you want beauty and convenience more than a traditional trail."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=1537+Co+Rd+210%2C+Eureka+Springs%2C+AR+72632&travelmode=driving",
+        directions: "1537 Co Rd 210, Eureka Springs, AR 72632",
+        sourceLinks: [
+          { label: "Arkansas.com Blue Spring page", url: "https://www.arkansas.com/eureka-springs/landmarks/blue-spring-heritage-center" },
+          { label: "Visit Eureka Springs Blue Spring page", url: "https://www.visiteurekasprings.com/blue-spring-heritage-center/" }
+        ]
+      },
+      {
+        id: "dam-site-river-walk",
+        name: "Dam Site River riverside walk",
+        lat: 36.4259,
+        lng: -93.8502,
+        color: "#2f7fb0",
+        glyph: "💧",
+        type: "local",
+        quiet: 3,
+        easy: 4,
+        drive: "~20-25 min from your stay",
+        crowd: "Can be busier than Beaver Trail",
+        chair: "Short stroll through public riverfront area",
+        view: "Cold White River water, bluffs, tailwater scenery",
+        highlights: ["Closest real riverbank stroll", "Tailwater scenery", "Easy add-on to fishing side of trip", "Public campground setting"],
+        summary: "This is more of a short public riverside walk than a classic named hiking trail, but it is one of the better White River-side scenic stops near the cabin corridor.",
+        why: "Recreation.gov describes Dam Site River Campground as sitting on the White River below Beaver Dam and lists hiking among the recreation options there. I would treat it as a good scenic walk-in area when you want river atmosphere more than a formal trail experience.",
+        beginner: "Use this as a short walk and viewpoint stop. Wander the obvious public campground and river-edge areas, enjoy the water and bluffs, and keep expectations to a relaxed riverside stroll.",
+        rules: [
+          "Stay in clearly public campground and river-access areas.",
+          "This is not a long signed trail system.",
+          "Respect occupied campsites and posted Corps rules."
+        ],
+        alerts: [
+          "I am treating this as an honest scenic walk suggestion, not a formal destination trail.",
+          "Best paired with a dam-area drive, fishing stop, or sightseeing loop."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=181+Dam+Site+River%2C+Eureka+Springs%2C+AR+72631&travelmode=driving",
+        directions: "181 Dam Site River, Eureka Springs, AR 72631",
+        sourceLinks: [
+          { label: "Recreation.gov Dam Site River page", url: "https://www.recreation.gov/camping/campgrounds/233099/campsites" },
+          { label: "Recreation.gov Dam Site River overview", url: "https://www.recreation.gov/camping/campgrounds/233099" }
+        ]
+      },
+      {
+        id: "lost-valley",
+        name: "Lost Valley Trail",
+        lat: 36.010183,
+        lng: -93.374533,
+        color: "#2f7fb0",
+        glyph: "💧",
+        type: "waterfall",
+        quiet: 3,
+        easy: 4,
+        drive: "~1 hr 20 min from your stay",
+        crowd: "Popular for good reason",
+        chair: "Trail hike, not a quick stroll",
+        view: "Waterfall, bluff shelter, creek, box canyon",
+        highlights: ["Eden Falls", "Cob Cave", "Natural bridge", "One of the easiest scenic Buffalo hikes"],
+        summary: "If you only do one waterfall hike on this trip, this is the safest bet.",
+        why: "The National Park Service describes Lost Valley as the park's most popular hike, and for a visitor that is mostly a plus here: it is scenic, straightforward, and the first section is easy to moderate with benches and a gentle grade.",
+        beginner: "Go early, wear real shoes, and aim for the classic out-and-back to Eden Falls. That gives you the signature scenery without turning the day into a complicated route-finding exercise.",
+        rules: [
+          "Pets are not allowed on Lost Valley Trail.",
+          "The Lost Valley area is open for day use only.",
+          "Backcountry camping is not permitted on Lost Valley Trail."
+        ],
+        alerts: [
+          "This can be slippery after rain.",
+          "It is popular, so go early if you want it calmer."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=36.010183%2C-93.374533&travelmode=driving",
+        directions: "36.010183,-93.374533",
+        sourceLinks: [
+          { label: "NPS Lost Valley trail page", url: "https://www.nps.gov/thingstodo/hike-the-lost-valley-trail.htm" },
+          { label: "NPS pets page", url: "https://www.nps.gov/buff/planyourvisit/pets.htm" },
+          { label: "NPS hiking trails page", url: "https://www.nps.gov/buff/planyourvisit/hiking-trails.htm" }
+        ]
+      },
+      {
+        id: "whitaker-point",
+        name: "Whitaker Point / Hawksbill Crag",
+        lat: 35.89836,
+        lng: -93.45803,
+        color: "#c78f37",
+        glyph: "🌄",
+        type: "views",
+        quiet: 2,
+        easy: 3,
+        drive: "~1 hr 30 min from your stay",
+        crowd: "One of the busiest famous-view hikes in the region",
+        chair: "Not chair-friendly; short proper hike",
+        view: "Iconic Arkansas bluff overlook",
+        highlights: ["Big payoff view", "Short moderate out-and-back", "Classic Arkansas photo stop", "Forest road approach"],
+        summary: "This is the postcard hike. Do it for the payoff, not for solitude.",
+        why: "Whitaker Point is the trail most likely to make the drive feel worth it on photos alone, and the Forest Service trailhead page gives current operational basics. It is also the trail most likely to feel busier than the rest of this map.",
+        beginner: "Treat this as an early-start photo hike. Go on a clear morning, pack water, and do not build the whole day around perfect solitude here.",
+        rules: [
+          "The Forest Service lists the trailhead as open 24 hours and free.",
+          "Restrooms are available, but potable water is not.",
+          "Stay back from exposed edges and watch footing near the overlook."
+        ],
+        alerts: [
+          "The approach road is the main headache for visitors.",
+          "This is not my pick if you want to quietly sit by yourself for a long time."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=35.89836%2C-93.45803&travelmode=driving",
+        directions: "35.89836,-93.45803",
+        sourceLinks: [
+          { label: "Forest Service Whitaker Point trailhead", url: "https://www.fs.usda.gov/r08/ozark-stfrancis/recreation/whitaker-point-hawksbill-crag-trailhead" },
+          { label: "Arkansas.com Whitaker Point page", url: "https://www.arkansas.com/ponca/landmarks/whitaker-point" },
+          { label: "Reddit road-condition thread", url: "https://www.reddit.com/r/Arkansas/comments/1f93ao6/" }
+        ]
+      },
+      {
+        id: "white-rock",
+        name: "White Rock Rim Trail",
+        lat: 35.69093,
+        lng: -93.95686,
+        color: "#c78f37",
+        glyph: "🌄",
+        type: "views",
+        quiet: 5,
+        easy: 3,
+        drive: "~1 hr 35 min from your stay",
+        crowd: "Usually much quieter than Whitaker Point",
+        chair: "Short scenic walk from recreation area parking",
+        view: "Huge Ozark ridge and bluff views",
+        highlights: ["Rim trail loop", "Quiet campsite energy", "Big panorama", "Strong shoulder-season day trip"],
+        summary: "This is my favorite big-view pick if you care more about space and atmosphere than checking off the famous photo-op trail.",
+        why: "Arkansas.com and Recreation.gov both frame White Rock as the quieter scenic alternative with a short rim loop and broad mountain views. The big tradeoff is that the area feels more remote and rougher to reach.",
+        beginner: "Use the recreation area as your anchor, keep it simple with the rim trail, and do not turn it into an off-trail bluff scramble.",
+        rules: [
+          "A current Forest Service order prohibits being on the rock surface of the White Rock bluffs through December 31, 2026.",
+          "Recreation.gov warns this is a high cliff area and children and pets must be supervised.",
+          "Pack it in and pack it out."
+        ],
+        alerts: [
+          "Remote feel and rougher drive than the local Eureka trails.",
+          "Great for quiet views, not ideal for rushed timing."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=White+Rock+Mountain+Recreation+Area%2C+214+Bowles+Gap+Rd%2C+Winslow%2C+AR+72959&travelmode=driving",
+        directions: "White Rock Mountain Recreation Area, 214 Bowles Gap Rd, Winslow, AR 72959",
+        sourceLinks: [
+          { label: "Arkansas.com White Rock article", url: "https://www.arkansas.com/articles/wild-and-scenic-beauty-white-rock-mountain" },
+          { label: "Recreation.gov White Rock page", url: "https://www.recreation.gov/camping/campgrounds/255177/campsites" },
+          { label: "Forest Service White Rock order", url: "https://www.fs.usda.gov/r08/ozark-stfrancis/alerts/forest-order-white-rock-rappelling" }
+        ]
+      },
+      {
+        id: "hobbs",
+        name: "Hobbs Sinking Stream + Van Winkle",
+        lat: 36.29692,
+        lng: -93.95839,
+        color: "#2f7fb0",
+        glyph: "💧",
+        type: "daytrip",
+        quiet: 4,
+        easy: 5,
+        drive: "~45 min from your stay",
+        crowd: "Usually a calm, family-style park stop",
+        chair: "Very easy short trails",
+        view: "Creek, springs, woods, historic mill site",
+        highlights: ["Two easy half-mile trails", "Good rainy-day backup", "Restrooms", "Low stress"],
+        summary: "This is the easiest off-Eureka day-trip backup if weather or energy makes the bigger drives feel like too much.",
+        why: "Arkansas State Parks has unusually clear trail pages here, including exact trailhead coordinates and current closure windows. That makes Hobbs a very dependable backup when you want a real walk without a rough forest-road gamble.",
+        beginner: "Pair Sinking Stream and Van Winkle together and call it a relaxed nature stop rather than a fitness hike.",
+        rules: [
+          "These trails are easy day hikes with posted trailheads and facilities.",
+          "Some Hobbs trails close during fall gun hunting dates, but those dates do not overlap your April trip.",
+          "Stay on the signed foot trail and use the designated trailhead parking."
+        ],
+        alerts: [
+          "This is more subtle scenery than a giant overlook or waterfall.",
+          "Best used as a calm backup, not your one signature adventure day."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=20201+East+Hwy.+12%2C+Rogers%2C+AR+72756&travelmode=driving",
+        directions: "20201 East Hwy. 12, Rogers, AR 72756",
+        sourceLinks: [
+          { label: "Arkansas State Parks Sinking Stream Trail", url: "https://www.arkansasstateparks.com/trails/sinking-stream-trail" },
+          { label: "Arkansas State Parks Historic Van Winkle Trail", url: "https://www.arkansasstateparks.com/trails/historic-van-winkle-trail" },
+          { label: "Hobbs State Park page", url: "https://www.arkansasstateparks.com/parks/hobbs-state-park-conservation-area" }
+        ]
+      },
+      {
+        id: "big-bluff",
+        name: "Big Bluff Trail at Bull Shoals-White River",
+        lat: 36.357699,
+        lng: -92.59155,
+        color: "#c78f37",
+        glyph: "🌄",
+        type: "daytrip",
+        quiet: 4,
+        easy: 3,
+        drive: "~2 hr 10 min from your stay",
+        crowd: "Usually calmer than Whitaker Point",
+        chair: "Proper hike with climb, not a casual stroll",
+        view: "White River overlook, dam view, cedar glades",
+        highlights: ["1.75-mile loop", "White River views", "State park trail", "Different look from the Ozark bluff hikes"],
+        summary: "A stronger White River day trip if you want something farther afield than the local walks but a little less famous than Whitaker Point.",
+        why: "Arkansas State Parks has a very clear official page for Big Bluff, and the trail gives you a different style of overlook: White River, Bull Shoals Dam, glades, and a more structured state-park feel than the rougher forest drives.",
+        beginner: "Treat this as a dedicated outing. If you want a day trip with good payoff but clearer facilities and trail info than the national-forest options, this is a solid pick.",
+        rules: [
+          "This is a moderate-to-strenuous day hike according to Arkansas State Parks.",
+          "Use the designated trailhead and stay on the marked loop.",
+          "Bring water and expect more elevation than the local Eureka walks."
+        ],
+        alerts: [
+          "This is the farthest hike on the map, so it only makes sense if you truly want a full-day drive.",
+          "A better fit for a hiking-focused day than a casual add-on."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=153+Dam+Overlook+Ln%2C+Bull+Shoals%2C+AR+72619&travelmode=driving",
+        directions: "153 Dam Overlook Ln, Bull Shoals, AR 72619",
+        sourceLinks: [
+          { label: "Arkansas State Parks Big Bluff Trail", url: "https://www.arkansasstateparks.com/trails/big-bluff-trail" },
+          { label: "Bull Shoals-White River State Park", url: "https://www.arkansasstateparks.com/parks/bull-shoals-white-river-state-park" }
+        ]
+      }
+    ];
+
+    const stay = {
+      lat: 36.4603,
+      lng: -93.8082,
+      mapLink: "https://www.google.com/maps/dir/?api=1&destination=486+County+Road+210%2C+Eureka+Springs%2C+AR+72632&travelmode=driving"
+    };
+
+    L.marker([stay.lat, stay.lng], { icon: homeIcon })
+      .addTo(map)
+      .bindPopup('<strong>Your stay area</strong><br>486 Co Rd 210, Eureka Springs<br><small>Approximate CR-210 / White River corridor marker based on nearby verified addresses</small><br><a href="' + stay.mapLink + '" target="_blank" rel="noopener noreferrer">Google Maps</a>');
+
+    let locationMarker = null;
+    let currentFilter = "all";
+    const layers = new Map();
+
+    function buildSheet(spot) {
+      const eyebrowMap = {
+        local: "Easy local trail",
+        waterfall: "Waterfall day trip",
+        views: "Big-view trail",
+        daytrip: "Easy day-trip backup"
+      };
+      const highlightsHtml = spot.highlights.map((item) => `<span class="pill">${item}</span>`).join("");
+      const rulesHtml = spot.rules.map((rule) => `<li>${rule}</li>`).join("");
+      const alertsHtml = spot.alerts.map((alert) => `<li>${alert}</li>`).join("");
+      const sourcesHtml = spot.sourceLinks.map((source) => `<li><a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.label}</a></li>`).join("");
+
+      document.getElementById("sheetInner").innerHTML = `
+        <div class="eyebrow">${eyebrowMap[spot.type] || "Trail stop"}</div>
+        <h2>${spot.name}</h2>
+        <p class="meta">${spot.drive} • ${spot.crowd} • ${spot.view}</p>
+
+        <div class="score-grid">
+          <div class="score-card">
+            <span class="label">Quiet</span>
+            <span class="value">${"★".repeat(spot.quiet)}${"☆".repeat(5 - spot.quiet)}</span>
+          </div>
+          <div class="score-card">
+            <span class="label">Ease</span>
+            <span class="value">${"★".repeat(spot.easy)}${"☆".repeat(5 - spot.easy)}</span>
+          </div>
+          <div class="score-card">
+            <span class="label">Style</span>
+            <span class="value">${spot.chair}</span>
+          </div>
+        </div>
+
+        <p class="body-copy">${spot.summary}</p>
+
+        <div class="action-row">
+          <a class="action-link" href="${spot.mapLink}" target="_blank" rel="noopener noreferrer">Google Maps</a>
+          <a class="action-link secondary" href="${spot.sourceLinks[0].url}" target="_blank" rel="noopener noreferrer">Primary source</a>
+        </div>
+
+        <div class="section-title">Why this fits</div>
+        <div class="callout good">${spot.why}</div>
+
+        <div class="section-title">Beginner setup</div>
+        <div class="callout rule">${spot.beginner}</div>
+
+        <div class="section-title">Highlights</div>
+        <div class="pill-list">${highlightsHtml}</div>
+
+        <div class="section-title">Rules to remember</div>
+        <ul class="list">${rulesHtml}</ul>
+
+        <div class="section-title">Heads up</div>
+        <ul class="list">${alertsHtml}</ul>
+
+        <div class="section-title">Sources</div>
+        <ul class="source-list">${sourcesHtml}</ul>
+      `;
+
+      document.getElementById("sheet").classList.add("open");
+      document.getElementById("sheetOverlay").classList.add("open");
+    }
+
+    function closeSheet() {
+      document.getElementById("sheet").classList.remove("open");
+      document.getElementById("sheetOverlay").classList.remove("open");
+    }
+
+    function openRules() {
+      document.getElementById("rulesModal").classList.add("open");
+      document.getElementById("rulesOverlay").classList.add("open");
+    }
+
+    function closeRules(event) {
+      if (event && event.target !== document.getElementById("rulesOverlay")) {
+        return;
+      }
+      document.getElementById("rulesModal").classList.remove("open");
+      document.getElementById("rulesOverlay").classList.remove("open");
+    }
+
+    function toggleNoteLabel() {
+      const note = document.querySelector("details.floating-note");
+      const label = document.getElementById("noteToggleLabel");
+      window.setTimeout(() => {
+        label.textContent = note.open ? "-" : "+";
+      }, 0);
+    }
+
+    function matchesFilter(spot, filter) {
+      if (filter === "all") return true;
+      if (filter === "local") return spot.type === "local";
+      if (filter === "waterfall") return spot.type === "waterfall";
+      if (filter === "views") return spot.type === "views";
+      if (filter === "quiet") return spot.quiet >= 4;
+      if (filter === "daytrip") return spot.type === "waterfall" || spot.type === "views" || spot.type === "daytrip";
+      return true;
+    }
+
+    function renderMarkers() {
+      spots.forEach((spot) => {
+        const visible = matchesFilter(spot, currentFilter);
+        const layer = layers.get(spot.id);
+        if (visible && !map.hasLayer(layer)) {
+          layer.addTo(map);
+        } else if (!visible && map.hasLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      });
+    }
+
+    function fitAll() {
+      const visibleSpots = spots.filter((spot) => matchesFilter(spot, currentFilter));
+      const bounds = L.latLngBounds([[stay.lat, stay.lng]]);
+      visibleSpots.forEach((spot) => bounds.extend([spot.lat, spot.lng]));
+      map.fitBounds(bounds.pad(0.16));
+    }
+
+    function locateMe() {
+      if (!navigator.geolocation) {
+        alert("Location services are not available in this browser.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          if (locationMarker) {
+            map.removeLayer(locationMarker);
+          }
+
+          locationMarker = L.marker([lat, lng], {
+            icon: L.divIcon({
+              className: "",
+              iconSize: [18, 18],
+              iconAnchor: [9, 9],
+              html: '<div style="width:18px;height:18px;border-radius:50%;background:#2f7fb0;border:3px solid #fff;box-shadow:0 0 0 7px rgba(47,127,176,0.20);"></div>'
+            })
+          }).addTo(map).bindPopup("You are here");
+
+          map.setView([lat, lng], 12, { animate: true });
+          locationMarker.openPopup();
+        },
+        () => {
+          alert("Could not get your location. Make sure browser location access is turned on.");
+        }
+      );
+    }
+
+    spots.forEach((spot) => {
+      const marker = L.marker([spot.lat, spot.lng], {
+        icon: markerIcon(spot.color, spot.glyph)
+      }).bindPopup(`<strong>${spot.name}</strong><br>${spot.drive}<br><a href="${spot.mapLink}" target="_blank" rel="noopener noreferrer">Google Maps</a>`).on("click", () => {
+        buildSheet(spot);
+        map.panTo([spot.lat, spot.lng], { animate: true, duration: 0.4 });
+      });
+
+      layers.set(spot.id, marker);
+      marker.addTo(map);
+    });
+
+    document.querySelectorAll(".chip").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        button.classList.add("active");
+        currentFilter = button.dataset.filter;
+        renderMarkers();
+        closeSheet();
+        fitAll();
+      });
+    });
+
+    map.on("click", closeSheet);
+    fitAll();
+  </script>
+</body>
+</html>

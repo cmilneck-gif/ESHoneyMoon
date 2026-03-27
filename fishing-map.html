@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eureka Springs Fishing Map</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous">
+  <style>
+    :root {
+      --pine: #19352a;
+      --forest: #275946;
+      --sage: #86a98b;
+      --cream: #f7f3ea;
+      --sand: #ece2d0;
+      --river: #2f7fb0;
+      --gold: #c78f37;
+      --ember: #c25e37;
+      --plum: #7b5bb7;
+      --ink: #1f2722;
+      --muted: #5a685f;
+      --card: rgba(255, 255, 255, 0.96);
+      --shadow: 0 18px 40px rgba(20, 31, 25, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #dce8df 0%, #f6f1e7 100%);
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: relative;
+      z-index: 1100;
+      padding: 10px 12px;
+      background:
+        radial-gradient(circle at top right, rgba(199, 143, 55, 0.22), transparent 34%),
+        linear-gradient(135deg, var(--pine), var(--forest));
+      color: #f7f8f4;
+      box-shadow: 0 8px 24px rgba(17, 34, 27, 0.22);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin-bottom: 0;
+      line-height: 1.1;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .top-btn,
+    .chip {
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .top-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+    }
+
+    .top-btn:active {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .chip-row {
+      position: absolute;
+      top: 60px;
+      left: 12px;
+      right: 12px;
+      z-index: 1050;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .chip-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: 0 10px 24px rgba(23, 31, 26, 0.12);
+      white-space: nowrap;
+      min-height: 38px;
+    }
+
+    .chip.active {
+      background: var(--pine);
+      color: #fff;
+    }
+
+    #map {
+      flex: 1;
+      width: 100%;
+    }
+
+    .floating-note {
+      position: absolute;
+      top: 106px;
+      left: 12px;
+      right: 12px;
+      z-index: 980;
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(247, 243, 234, 0.94);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .floating-note strong {
+      display: block;
+      font-size: 0.87rem;
+      margin-bottom: 3px;
+    }
+
+    .floating-note summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .floating-note summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .note-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .note-copy {
+      margin-top: 8px;
+    }
+
+    .note-toggle {
+      min-width: 22px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--forest);
+      white-space: nowrap;
+    }
+
+    .legend {
+      position: absolute;
+      bottom: 14px;
+      left: 12px;
+      z-index: 980;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size: 0.75rem;
+      line-height: 1.35;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 4px;
+    }
+
+    .legend-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .locate-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 14px;
+      z-index: 980;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+      font-size: 1.1rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .sheet,
+    .modal {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 1300;
+      transform: translateY(100%);
+      transition: transform 0.28s ease;
+      background: #fff;
+      border-radius: 22px 22px 0 0;
+      box-shadow: 0 -14px 32px rgba(20, 31, 25, 0.2);
+      max-height: 84vh;
+      overflow-y: auto;
+    }
+
+    .sheet.open,
+    .modal.open {
+      transform: translateY(0);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 20, 0.48);
+      z-index: 1200;
+      display: none;
+    }
+
+    .overlay.open {
+      display: block;
+    }
+
+    .handle {
+      width: 40px;
+      height: 5px;
+      border-radius: 999px;
+      background: #d9ddd8;
+      margin: 10px auto 8px;
+    }
+
+    .sheet-inner,
+    .modal-inner {
+      padding: 0 16px 28px;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      border: 0;
+      background: none;
+      color: #869088;
+      font-size: 1.7rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      background: #eef5ef;
+      color: var(--forest);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sheet h2,
+    .modal h2 {
+      font-size: 1.3rem;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      padding-right: 28px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .score-card {
+      border-radius: 14px;
+      background: #f3f5f2;
+      padding: 10px 10px 11px;
+    }
+
+    .score-card .label {
+      display: block;
+      color: #7a837c;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .score-card .value {
+      font-size: 0.88rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .body-copy {
+      font-size: 0.92rem;
+      line-height: 1.55;
+      color: #344039;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6c776e;
+      margin-bottom: 7px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #eff2ef;
+      color: #2e3b34;
+      font-size: 0.82rem;
+    }
+
+    .callout {
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 10px;
+      font-size: 0.87rem;
+      line-height: 1.5;
+    }
+
+    .callout.good {
+      background: #edf6ef;
+      color: #224533;
+      border-left: 4px solid #4a8b5b;
+    }
+
+    .callout.warn {
+      background: #fff4e8;
+      color: #6a4222;
+      border-left: 4px solid var(--gold);
+    }
+
+    .callout.rule {
+      background: #edf5fb;
+      color: #20435c;
+      border-left: 4px solid var(--river);
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .action-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    .action-link {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--pine);
+    }
+
+    .action-link.secondary {
+      background: #dfe9e1;
+      color: var(--pine);
+    }
+
+    .list {
+      list-style: none;
+      margin-bottom: 14px;
+    }
+
+    .list li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 7px;
+      color: #344039;
+    }
+
+    .source-list {
+      list-style: none;
+      margin-top: 10px;
+    }
+
+    .source-list li {
+      margin-bottom: 8px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    a {
+      color: var(--river);
+    }
+
+    .leaflet-control-zoom {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .leaflet-control-zoom a {
+      border: none !important;
+      border-radius: 12px !important;
+      margin-bottom: 6px !important;
+      box-shadow: 0 12px 24px rgba(20, 31, 25, 0.16) !important;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      box-shadow: 0 14px 30px rgba(20, 31, 25, 0.16);
+    }
+
+    @media (min-width: 720px) {
+      .chip-row {
+        right: auto;
+        max-width: 660px;
+      }
+
+      .floating-note {
+        right: auto;
+        max-width: 440px;
+      }
+
+      .legend {
+        left: 18px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      h1 {
+        font-size: 0.92rem;
+        padding-top: 0;
+        text-align: center;
+      }
+
+      .top-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .top-btn {
+        padding: 7px 9px;
+        font-size: 0.74rem;
+      }
+
+      .chip-row {
+        top: 100px;
+      }
+
+      .floating-note {
+        top: 146px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <h1>Eureka Springs Fishing Map</h1>
+      <div class="top-actions">
+        <a class="top-btn" href="/Users/dfxstudio/Claude/index.html">Back to hub</a>
+        <button class="top-btn" type="button" onclick="openRules()">Rules + trip notes</button>
+        <a class="top-btn" href="/Users/dfxstudio/Claude/fishing-reading.html">Trip reading</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="chip-row" id="filterRow">
+    <button class="chip active" type="button" data-filter="all">All spots</button>
+    <button class="chip" type="button" data-filter="trout">Trout first</button>
+    <button class="chip" type="button" data-filter="quiet">Quietest</button>
+    <button class="chip" type="button" data-filter="easy">Easy chair setup</button>
+    <button class="chip" type="button" data-filter="warm">Bass and panfish</button>
+    <button class="chip" type="button" data-filter="shops">Bait + tackle</button>
+  </div>
+
+  <div id="map"></div>
+  <div id="mapFallback" class="floating-note" style="display:none;">
+    <strong>Map load fallback</strong>
+    The live basemap did not load in this browser. The fishing spots and Google Maps links below still work, and opening this file through a small local web server instead of straight from `file://` usually fixes blocked map resources.
+  </div>
+
+  <details class="floating-note" open>
+    <summary class="note-summary" onclick="toggleNoteLabel()">
+      <strong>Cabin walkability note</strong>
+      <span class="note-toggle" id="noteToggleLabel">-</span>
+    </summary>
+    <div class="note-copy">
+      There does not appear to be true walk-to-the-river public fishing from the cabin ridge itself. The White River options now include Houseman, Parker Bend, Bertrand, Parker Bottoms, Spider Creek, the Highway 62 bridge stretch, and the Beaver town / Riverview side farther downstream. For easy supplies, Riverview is the clearest nearby live-bait stop.
+    </div>
+  </details>
+
+  <div class="legend">
+    <div class="legend-row"><span class="legend-dot" style="background:#2f7fb0"></span>Trout water</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#4a8b5b"></span>Quiet / beginner friendly</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#c78f37"></span>Scenic warmwater</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#7b5bb7"></span>Bait and tackle</div>
+    <div class="legend-row"><span class="legend-dot" style="background:#c25e37"></span>Your stay area</div>
+  </div>
+
+  <button class="locate-btn" type="button" onclick="locateMe()" aria-label="Find my location">◎</button>
+
+  <div class="overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+  <div class="sheet" id="sheet">
+    <div class="handle"></div>
+    <button class="close-btn" type="button" onclick="closeSheet()">×</button>
+    <div class="sheet-inner" id="sheetInner"></div>
+  </div>
+
+  <div class="overlay" id="rulesOverlay" onclick="closeRules(event)"></div>
+  <div class="modal" id="rulesModal">
+    <div class="handle"></div>
+    <button class="close-btn" type="button" onclick="closeRules()">×</button>
+    <div class="modal-inner">
+      <div class="eyebrow">Arkansas rules</div>
+      <h2>What to know before you fish</h2>
+      <p class="meta">These notes are based on current AGFC rules and pages available on March 27, 2026. Because your trip is April 20-24, 2026, I weighted the items that matter in late April around Beaver Tailwater.</p>
+
+      <div class="callout rule">
+        <strong>Beaver Tailwater basics</strong><br>
+        A trout permit is required there, and you already have the right permit. The Beaver Tailwater is the White River stretch from 100 yards below Beaver Dam down to Houseman Access.
+      </div>
+
+      <ul class="list">
+        <li><strong>One rod only on Beaver Tailwater:</strong> AGFC says anglers may use no more than one fishing rod or pole there, and it must be attended at all times.</li>
+        <li><strong>Do not fish within 100 yards of Beaver Dam:</strong> fishing, boating, and wading are prohibited inside that zone.</li>
+        <li><strong>Bait on Beaver Tailwater:</strong> if you use bait, it must be on a single hooking point. In the signed artificial-only stretch below the dam, natural or scented bait is prohibited and all hooking points must be barbless.</li>
+        <li><strong>Parker Bend matters:</strong> the artificial-lures-only zone runs from about 0.5 mile below Beaver Dam to about 100 yards upstream of Parker Bend Access. That means Parker Bend itself is the safer beginner pick if you want to relax with bait rather than fish artificial-only water.</li>
+        <li><strong>Current trout limit change:</strong> AGFC's emergency trout order says anglers on Beaver Tailwater may keep only 2 trout up to 14 inches and must release all other trout. Since you are planning catch-and-release, the main practical takeaway is to release any trout over 14 inches immediately and handle fish gently.</li>
+        <li><strong>Houseman is farther downstream:</strong> it is still public Beaver Tailwater access, but it sits away from the tighter near-dam regulation area and can feel calmer when you mainly want room to learn.</li>
+        <li><strong>Night rule:</strong> only rainbow trout may be harvested from 30 minutes after sunset to 30 minutes before sunrise on Beaver Tailwater.</li>
+        <li><strong>Your travel dates overlap snagging season:</strong> from April 15 through June 15, snagging game fish is legal only in the near-dam stretch down to the first Corps ramp. That can concentrate people closer to the dam, which is why Parker Bend is my quieter trout recommendation.</li>
+      </ul>
+
+      <div class="callout warn">
+        <strong>Always check water release before tailwater fishing</strong><br>
+        Call the Southwestern Power Administration generation line at <a href="tel:8664941993">866-494-1993</a> before you head to Beaver Tailwater. Water levels can change quickly and unsafe conditions can develop fast.
+      </div>
+
+      <div class="callout good">
+        <strong>Catch-and-release for learning</strong><br>
+        Wet your hands before touching fish, keep them in the water as much as possible, and pinch down barbs when you can. That is especially helpful for trout and for a new angler still getting comfortable with unhooking fish.
+      </div>
+
+      <div class="section-title">Spot-specific caution</div>
+      <ul class="list">
+        <li><strong>Dam Site Park:</strong> scenic trout water, but it sits closer to the more regulated and potentially busier near-dam zone. Best if you are comfortable using small lures or flies instead of bait.</li>
+        <li><strong>Kings River:</strong> if you explore it, know that special smallmouth limits apply on parts of the river. Since you are releasing fish, the easy rule is simply release all bass there.</li>
+        <li><strong>Black Bass Lake:</strong> respect posted restricted areas around the dam and spillway, and stay on the public shoreline and trail-side bank areas.</li>
+      </ul>
+
+      <div class="section-title">Official sources</div>
+      <ul class="source-list">
+        <li><a href="https://apps.agfc.com/regulations/N1.03/" target="_blank" rel="noopener noreferrer">AGFC N1.03 Specific Trout Water Regulations</a></li>
+        <li><a href="https://www.agfc.com/news/commission-approves-emergency-order-for-trout-tailwaters-limits-temporarily-curtailed/" target="_blank" rel="noopener noreferrer">AGFC emergency trout order news release</a></li>
+        <li><a href="https://intranet.agfc.com/en/zone-map/fishing-map/531/" target="_blank" rel="noopener noreferrer">AGFC Beaver Tailwater fishing map page</a></li>
+        <li><a href="https://apps.agfc.com/regulations/detail/a42aa1e4-55c3-47ee-b321-52a2fc70f139/" target="_blank" rel="noopener noreferrer">AGFC N1.01 Game Fish Daily Limits</a></li>
+        <li><a href="https://www.agfc.com/regulations/guidebooks/" target="_blank" rel="noopener noreferrer">AGFC fishing guidebooks and updates</a></li>
+      </ul>
+
+      <div class="action-row single">
+        <a class="action-link" href="https://apps.agfc.com/mapper/?_gl=1*1pbjtgy*_gcl_au*Mjc0Njc5OTMzLjE3NzQ1NDQ3NDc.*_ga*NTk2ODkyNjAxLjE3NzQ1NDQ3NDg.*_ga_4C9QCEC47W*czE3NzQ2MjYzMDMkbzMkZzEkdDE3NzQ2Mjc3NzQkajQ3JGwwJGgw#8/34.780/-92.274" target="_blank" rel="noopener noreferrer">Open AGFC access mapper</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+  <script>
+    if (typeof L === "undefined") {
+      document.getElementById("map").style.display = "none";
+      document.getElementById("mapFallback").style.display = "block";
+      throw new Error("Leaflet failed to load.");
+    }
+
+    const map = L.map("map", {
+      center: [36.408, -93.78],
+      zoom: 11,
+      zoomControl: true
+    });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: "abcd",
+      maxZoom: 20
+    }).addTo(map);
+
+    map.zoomControl.setPosition("bottomright");
+
+    function markerIcon(color, glyph) {
+      return L.divIcon({
+        className: "",
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
+        popupAnchor: [0, -18],
+        html: `<div style="width:38px;height:38px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:17px;">${glyph}</div>`
+      });
+    }
+
+    const homeIcon = L.divIcon({
+      className: "",
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      html: '<div style="width:40px;height:40px;border-radius:50%;background:#c25e37;border:3px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,0.22);display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;">🏡</div>'
+    });
+
+    const spots = [
+      {
+        id: "parker-bend",
+        name: "Parker Bend Access",
+        lat: 36.4311,
+        lng: -93.8225,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 5,
+        easy: 5,
+        drive: "~20 min from your stay",
+        crowd: "Usually the quietest trout pick on this map",
+        chair: "Easy bank setup",
+        view: "Cold river canyon and bluff scenery",
+        fish: ["Rainbow trout", "Brown trout", "Occasional walleye", "White bass"],
+        summary: "My best match for what you asked for: public access, chair-friendly bank fishing, trout water, and a better chance of staying away from the near-dam crowd.",
+        why: "AGFC lists Parker Bend as a handicap-accessible access on Beaver Tailwater. Because your trip dates fall during the April 15 to June 15 snagging window that draws people closer to the dam, Parker Bend is the spot I would try first if you want trout without feeling in the way.",
+        beginner: "If you want the easiest trout setup, use a light spinning rod with PowerBait or a worm on a single hook at the access itself. If you move upstream toward signed special-regulation water, switch to artificial lures or flies with barbless hooks.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Bait fishing must use a single hook.",
+          "Any trout over 14 inches must be released under the current emergency trout order."
+        ],
+        alerts: [
+          "Call 866-494-1993 before you go to check generation at Beaver Dam.",
+          "The artificial-lures-only zone starts upstream of Parker Bend and runs toward the dam."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=36.4311%2C-93.8225&travelmode=driving",
+        directions: "36.4311,-93.8225",
+        sourceLinks: [
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" },
+          { label: "AGFC trout regulations", url: "https://apps.agfc.com/regulations/N1.03/" },
+          { label: "AGFC emergency trout order", url: "https://www.agfc.com/news/commission-approves-emergency-order-for-trout-tailwaters-limits-temporarily-curtailed/" }
+        ]
+      },
+      {
+        id: "dam-site",
+        name: "Dam Site Park walk-ins",
+        lat: 36.4251,
+        lng: -93.8460,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 2,
+        easy: 4,
+        drive: "~25 min from your stay",
+        crowd: "More likely to see other anglers",
+        chair: "Good if you want easy parking and short walks",
+        view: "Closest dramatic tailwater scenery",
+        fish: ["Rainbow trout", "Brown trout", "Walleye"],
+        summary: "A strong scenic backup trout option, but I would treat it as your second choice if solitude matters more than being close to the dam.",
+        why: "This area gives you very pretty tailwater bank access, but it is closer to the special-regulation and snagging-zone activity. During your April dates, that makes it less ideal for a relaxed first outing than Parker Bend.",
+        beginner: "Fish small spoons, inline spinners, or marabou jigs here. Keep them simple and slow. This is not the best place to rely on bait during your trip because the special zone near the dam is artificial-only.",
+        rules: [
+          "One rod only on Beaver Tailwater.",
+          "Artificial lures or flies only in the signed no-bait zone below the dam.",
+          "All hooking points must be barbless in that special zone.",
+          "Release trout over 14 inches under the current emergency order."
+        ],
+        alerts: [
+          "This is the spot most likely to feel busy during the April 15 to June 15 snagging window.",
+          "Call 866-494-1993 before you go to check water release."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=348+Damsite+Lake+Rd%2C+Eureka+Springs%2C+AR+72631&travelmode=driving",
+        directions: "348 Damsite Lake Rd, Eureka Springs, AR 72631",
+        sourceLinks: [
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" },
+          { label: "AGFC trout regulations", url: "https://apps.agfc.com/regulations/N1.03/" }
+        ]
+      },
+      {
+        id: "houseman",
+        name: "Houseman Access",
+        lat: 36.5048,
+        lng: -93.7585,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 4,
+        easy: 4,
+        drive: "~25-30 min from your stay",
+        crowd: "Usually calmer than the near-dam accesses",
+        chair: "Easy if you are comfortable fishing near a ramp and bank edge",
+        view: "Broader White River valley scenery",
+        fish: ["Rainbow trout", "Brown trout", "White bass", "Occasional walleye"],
+        summary: "A strong trout option if you want public access on the Beaver Tailwater but would rather stay farther from the dam crowd and the April snagging concentration.",
+        why: "AGFC identifies Houseman as the downstream public access that marks the end of Beaver Tailwater. That makes it a useful alternative when Parker Bend is busy or when you want a simpler, less pressured-feeling stop.",
+        beginner: "Bring the same light trout setup you would use at Parker Bend. Focus on slower current seams and eddies near access water instead of trying to cover huge stretches.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Bait fishing must use a single hook.",
+          "Release trout over 14 inches under the current emergency trout order."
+        ],
+        alerts: [
+          "Still check generation before you go because Beaver Dam release affects the whole tailwater.",
+          "This is more about room and simplicity than dramatic dam scenery.",
+          "Nearby White River cabin listings note river views but no direct river access, which is why this is the closest practical first stop."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=424-448+Co+Rd+214%2C+Eureka+Springs%2C+AR+72631&travelmode=driving",
+        directions: "424-448 Co Rd 214, Eureka Springs, AR 72631",
+        sourceLinks: [
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" },
+          { label: "AGFC trout regulations", url: "https://apps.agfc.com/regulations/N1.03/" },
+          { label: "AGFC emergency trout order", url: "https://www.agfc.com/news/commission-approves-emergency-order-for-trout-tailwaters-limits-temporarily-curtailed/" }
+        ]
+      },
+      {
+        id: "bertrand",
+        name: "Bertrand Access",
+        lat: 36.4292,
+        lng: -93.8485,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 3,
+        easy: 4,
+        drive: "~22-25 min from your stay",
+        crowd: "Moderate",
+        chair: "Easy roadside stop if you want a quick look",
+        view: "Tailwater bank scenery with easier developed access",
+        fish: ["Rainbow trout", "Brown trout"],
+        summary: "A practical in-between option on the tailwater if you want easier access than a rough bank but do not need the near-dam experience.",
+        why: "AGFC lists Bertrand as one of the public tailwater accesses at Dam Site Park. It is useful as a backup trout stop when you want to scout conditions or make a shorter session.",
+        beginner: "Use simple trout gear and keep your expectations flexible here. If the area feels busy, move on to Parker Bend or Houseman instead of forcing it.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Pay attention to signed special-regulation water if you move closer to the dam."
+        ],
+        alerts: [
+          "This can see spillover pressure when the dam area is active.",
+          "Call generation before your trip: 866-494-1993."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=36.4292%2C-93.8485&travelmode=driving",
+        directions: "36.4292,-93.8485",
+        sourceLinks: [
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" },
+          { label: "AGFC trout regulations", url: "https://apps.agfc.com/regulations/N1.03/" }
+        ]
+      },
+      {
+        id: "parker-bottoms",
+        name: "Parker Bottoms pull-offs",
+        lat: 36.4304,
+        lng: -93.8368,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 4,
+        easy: 3,
+        drive: "~20-25 min from your stay",
+        crowd: "Usually lower-key than the main dam stop",
+        chair: "Okay if you do not mind informal roadside-style access",
+        view: "Pretty White River bank with fewer people than the obvious pull-ins",
+        fish: ["Rainbow trout", "Brown trout", "White bass", "Occasional walleye"],
+        summary: "This is the closest thing on the map to a locals-style hidden trout stop: not secret, but easier to miss if you only look at the main named accesses.",
+        why: "Older AGFC reports call out the stretch between Bertrand and Parker Bottoms, and local chatter often points newer anglers away from the obvious near-dam pressure and toward these quieter pull-off areas.",
+        beginner: "Scout first, then pick the easiest bank with enough room for your chair. A light trout rig with PowerBait or a single-hook worm setup is the simplest play if the spot is outside the signed artificial-only zone.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Respect all posted access signs because this is more informal than a big developed ramp."
+        ],
+        alerts: [
+          "This is intentionally a lower-profile stop, so amenities are limited.",
+          "Scout carefully and skip it if parking or bank access looks questionable that day."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=36.4304%2C-93.8368&travelmode=driving",
+        directions: "36.4304,-93.8368",
+        sourceLinks: [
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" },
+          { label: "AGFC weekly report mentioning Parker Bottoms", url: "https://www.agfc.com/news/arkansas-wildlife-fishing-report-2017-03-22/" },
+          { label: "Area listing for Parker Bottoms Hwy", url: "https://www.trulia.com/home/highway-187-parker-bottoms-hwy-eureka-springs-ar-72631-2055000238" }
+        ]
+      },
+      {
+        id: "spider-creek",
+        name: "Spider Creek stretch",
+        lat: 36.444278,
+        lng: -93.83849,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 4,
+        easy: 3,
+        drive: "~10-15 min from your stay",
+        crowd: "Lower-key report-based river stop",
+        chair: "Okay if you are comfortable scouting an informal bank area",
+        view: "White River corridor closer to your cabin side",
+        fish: ["Rainbow trout", "Brown trout", "White bass in season"],
+        summary: "One of the closest river stretches to your cabin marker that keeps showing up in Beaver Tailwater reports.",
+        why: "AGFC fishing reports repeatedly reference trout action between Spider Creek and the U.S. Highway 62 bridge, which makes this a good report-based area to scout if you want river water closer to your stay.",
+        beginner: "Treat this as a scout-and-see stop instead of a guaranteed setup. If access or bank room feels awkward, move on to Houseman or Parker Bend.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Use posted access areas only and respect private property."
+        ],
+        alerts: [
+          "This is an approximate stretch marker, not a single formal launch.",
+          "Best used as a local-style backup after checking conditions."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=8179+Highway+187%2C+Eureka+Springs%2C+AR+72631&travelmode=driving",
+        directions: "8179 Highway 187, Eureka Springs, AR 72631",
+        sourceLinks: [
+          { label: "AGFC fishing report mentioning Spider Creek", url: "https://www.agfc.com/news/arkansas-wildlife-fishing-report-34/" },
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" }
+        ]
+      },
+      {
+        id: "hwy62-bridge",
+        name: "U.S. 62 bridge stretch",
+        lat: 36.4719,
+        lng: -93.7548,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 4,
+        easy: 3,
+        drive: "~10-15 min from your stay",
+        crowd: "Often overlooked compared with named accesses",
+        chair: "Works if you can find safe legal pull-off access nearby",
+        view: "Broader White River valley with easier downstream feel",
+        fish: ["Rainbow trout", "Brown trout", "White bass in season"],
+        summary: "Another close White River stretch that shows up in reports as productive and less obvious than the main named tailwater stops.",
+        why: "AGFC reports specifically mention fish being caught between Spider Creek and the U.S. Highway 62 bridge, so this is worth having pinned if you want more White River options near the cabin side of the corridor.",
+        beginner: "Use this as a scout marker. If you find a comfortable legal bank area, fish simple single-hook bait or small lures and release everything.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Stay on public or clearly legal roadside access only."
+        ],
+        alerts: [
+          "Approximate stretch marker only.",
+          "Do not block roads or use questionable pull-offs."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=17939+Highway+62+W%2C+Eureka+Springs%2C+AR+72632&travelmode=driving",
+        directions: "17939 Highway 62 W, Eureka Springs, AR 72632",
+        sourceLinks: [
+          { label: "AGFC fishing report mentioning U.S. 62 bridge", url: "https://www.agfc.com/news/arkansas-wildlife-fishing-report-34/" },
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" }
+        ]
+      },
+      {
+        id: "beaver-town",
+        name: "Beaver town downstream stretch",
+        lat: 36.5208,
+        lng: -93.7192,
+        color: "#2f7fb0",
+        glyph: "🐟",
+        type: "trout",
+        quiet: 4,
+        easy: 3,
+        drive: "~15-20 min from your stay",
+        crowd: "Quiet downstream option",
+        chair: "Best if you do not mind scouting for the easiest bank",
+        view: "Broader White River water with a more relaxed downstream feel",
+        fish: ["Rainbow trout", "Brown trout", "White bass in season"],
+        summary: "A farther-down White River option if you want to stay away from the more obvious tailwater traffic and try a calmer stretch.",
+        why: "AGFC reports mention white bass activity between Houseman and Beaver town, which makes this a useful downstream marker when you want to explore beyond the standard access list.",
+        beginner: "Think of this as a secondary exploration stop. If you want certainty, fish Houseman first and then scout farther toward Beaver town.",
+        rules: [
+          "Beaver Tailwater requires your trout permit.",
+          "One rod only on Beaver Tailwater.",
+          "Use obvious public access only and release fish unless you are certain of the rule."
+        ],
+        alerts: [
+          "Approximate stretch marker based on reports, not a formal single access ramp.",
+          "Good for exploration, not my first-choice beginner stop."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Beaver%2C+AR+72631&travelmode=driving",
+        directions: "Beaver, AR 72631",
+        sourceLinks: [
+          { label: "AGFC fishing report mentioning Beaver town", url: "https://www.agfc.com/news/arkansas-wildlife-fishing-report-34/" },
+          { label: "AGFC Beaver Tailwater page", url: "https://intranet.agfc.com/en/zone-map/fishing-map/531/" }
+        ]
+      },
+      {
+        id: "leatherwood",
+        name: "Lake Leatherwood",
+        lat: 36.4351,
+        lng: -93.7606,
+        color: "#4a8b5b",
+        glyph: "🌲",
+        type: "quiet",
+        quiet: 4,
+        easy: 5,
+        drive: "~15 min from your stay",
+        crowd: "Easy to spread out around coves",
+        chair: "Best all-around beginner comfort",
+        view: "Big stone dam, wooded banks, spring-fed lake",
+        fish: ["Largemouth bass", "Bluegill", "Crappie", "Catfish"],
+        summary: "If you want the least stressful learning session, this is it. You can buy bait, sit comfortably, and not worry about trout-only rules.",
+        why: "Lake Leatherwood City Park is close to you, scenic, and forgiving for a new angler. It is the best place on the map for a low-pressure practice day before or after tailwater trout fishing.",
+        beginner: "A bobber with a worm is great here for bluegill. For bass, try a small inline spinner or soft plastic around wood and shaded bank edges. Walk until you find a quiet cove and settle in.",
+        rules: [
+          "No trout permit needed here.",
+          "Standard statewide Arkansas fishing limits apply.",
+          "If you are only learning and releasing fish, you avoid most limit concerns."
+        ],
+        alerts: [
+          "This is a city park lake, not a trout water.",
+          "Amenities and bait are a plus here, but check park hours locally if you plan an early or late session."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Lake+Leatherwood+City+Park%2C+Eureka+Springs%2C+AR&travelmode=driving",
+        directions: "Lake Leatherwood City Park, Eureka Springs, AR",
+        sourceLinks: [
+          { label: "Eureka Springs boating and fishing page", url: "https://www.eurekaparks.com/boatingandfishing" },
+          { label: "Eureka Springs parks home page", url: "https://www.eurekaparks.com/" }
+        ]
+      },
+      {
+        id: "black-bass",
+        name: "Black Bass Lake",
+        lat: 36.3950899,
+        lng: -93.7451853,
+        color: "#4a8b5b",
+        glyph: "🌲",
+        type: "quiet",
+        quiet: 5,
+        easy: 4,
+        drive: "~15 min from your stay",
+        crowd: "Usually very calm",
+        chair: "Good if you do not mind a short walk",
+        view: "Quiet lake ringed by woods and historic stonework",
+        fish: ["Bass", "Bluegill"],
+        summary: "This is your best non-trout solitude play. It is more about peace and scenery than about maximizing catches.",
+        why: "Black Bass Lake is one of the easiest places near Eureka Springs to simply sit back and cast without feeling crowded. It is less developed than Leatherwood, which usually helps with the quiet factor.",
+        beginner: "Bring light tackle and keep expectations simple: worms under a bobber for bluegill, or a small spinner around shoreline cover for bass. Pick a bench or flat bank stretch and settle in.",
+        rules: [
+          "No trout permit needed here.",
+          "Standard statewide Arkansas limits apply.",
+          "Respect any posted restricted areas around the dam and spillway."
+        ],
+        alerts: [
+          "Less infrastructure than Leatherwood, so bring your own water and basics.",
+          "This is better for a peaceful practice session than for chasing a specific trophy fish."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Black+Bass+Lake%2C+Eureka+Springs%2C+AR&travelmode=driving",
+        directions: "Black Bass Lake, Eureka Springs, AR",
+        sourceLinks: [
+          { label: "Eureka Springs parks page", url: "https://www.eurekaparks.com/parks" },
+          { label: "Eureka Springs boating and fishing page", url: "https://www.eurekaparks.com/boatingandfishing" }
+        ]
+      },
+      {
+        id: "holiday-island",
+        name: "Holiday Island Marina bank areas",
+        lat: 36.4901079,
+        lng: -93.7601377,
+        color: "#4a8b5b",
+        glyph: "🌲",
+        type: "quiet",
+        quiet: 4,
+        easy: 4,
+        drive: "~20-25 min from your stay",
+        crowd: "Often quieter than the most famous Beaver Lake stops",
+        chair: "Good if you like marina-adjacent easy access",
+        view: "Sheltered Beaver Lake coves and bluff views",
+        fish: ["Crappie", "Bass", "Bluegill", "Catfish"],
+        summary: "A nice lower-profile public option when you want easier access and calmer water without the foot traffic of the biggest Beaver Lake park areas.",
+        why: "Local mentions consistently bring up Holiday Island as an easier-going Beaver Lake area. It is not hidden from locals, but it is easy for visitors to overlook in favor of Prairie Creek or Hickory Creek.",
+        beginner: "Fish the calmer shoreline and marina-adjacent structure with a worm, small jig, or inline spinner. It is a comfortable place to sit, make easy casts, and learn what a bite feels like.",
+        rules: [
+          "No trout permit needed here.",
+          "Standard Beaver Lake species rules apply.",
+          "Catch-and-release keeps this simple."
+        ],
+        alerts: [
+          "Stay on clearly public marina or shoreline areas and avoid private dock space.",
+          "This is more of a local-feeling comfort spot than a trophy destination."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=124+Woodsdale+Dr%2C+Holiday+Island%2C+AR+72631&travelmode=driving",
+        directions: "124 Woodsdale Dr, Holiday Island, AR 72631",
+        sourceLinks: [
+          { label: "Holiday Island Marina official page", url: "https://holidayislandmarina.com/" },
+          { label: "Marina contact page with address", url: "https://holidayislandmarina.com/food-menu/" },
+          { label: "AGFC public fishing areas", url: "https://www.agfc.com/fishing/where-to-fish/public-fishing-areas/" }
+        ]
+      },
+      {
+        id: "riverview-store",
+        name: "Riverview Country Store",
+        lat: 36.5056,
+        lng: -93.7424,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~15-20 min from your stay",
+        crowd: "Quick supply stop",
+        chair: "Store stop",
+        view: "Near White River corridor",
+        fish: ["Live bait", "Tackle", "Licenses", "Store basics"],
+        summary: "This is the clearest live-bait stop near your cabin area and the best place to resupply before heading to Houseman or other downstream water.",
+        why: "Riverview's country store specifically advertises live bait, tackle, and fishing licenses. If you want one dependable White River-side stop for worms or other bait, this is the one I would keep pinned.",
+        beginner: "Stop here first if you want to ask what is working that week and grab bait without driving all the way to the dam area.",
+        rules: [
+          "Shop marker only, not a fishing access.",
+          "Good fit for live bait and quick local intel."
+        ],
+        alerts: [
+          "Call ahead if you want something specific in stock.",
+          "This is the most useful nearby live-bait option I found."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=17939+Highway+62+W%2C+Eureka+Springs%2C+AR+72632&travelmode=driving",
+        directions: "17939 Highway 62 W, Eureka Springs, AR 72632",
+        sourceLinks: [
+          { label: "Arkansas.com Riverview listing", url: "https://www.arkansas.com/eureka-springs/outdoor-recreation/riverview-resort-country-store" },
+          { label: "Riverview site", url: "https://riverviewcabinsandcanoes.com/" }
+        ]
+      },
+      {
+        id: "leatherwood-shop",
+        name: "Lake Leatherwood Bait Shop",
+        lat: 36.4351,
+        lng: -93.7606,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~15 min from your stay",
+        crowd: "Easy in-town stop",
+        chair: "Store stop",
+        view: "Inside Lake Leatherwood park",
+        fish: ["Bait shop", "Tackle", "Lake advice"],
+        summary: "Best simple all-around bait-and-tackle stop if you are already planning to fish Leatherwood or want something easy on the Eureka Springs side.",
+        why: "The city park specifically notes an on-site bait shop at Lake Leatherwood, which makes it one of the easiest places to get geared up without a big detour.",
+        beginner: "Good stop if you want a basic starter setup for panfish or bass and do not need specialized trout advice.",
+        rules: [
+          "Shop marker only, not a separate fishing access.",
+          "Pairs naturally with Lake Leatherwood."
+        ],
+        alerts: [
+          "Check park or shop hours if you are going very early or late.",
+          "Bait availability can vary."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=Lake+Leatherwood+City+Park%2C+Eureka+Springs%2C+AR&travelmode=driving",
+        directions: "Lake Leatherwood City Park, Eureka Springs, AR",
+        sourceLinks: [
+          { label: "Eureka Springs boating and fishing page", url: "https://www.eurekaparks.com/boatingandfishing" },
+          { label: "Eureka Parks home page", url: "https://www.eurekaparks.com/" }
+        ]
+      },
+      {
+        id: "beaver-dam-store",
+        name: "Beaver Dam Store",
+        lat: 36.4368,
+        lng: -93.8449,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~20-25 min from your stay",
+        crowd: "Classic trout-shop stop",
+        chair: "Store stop",
+        view: "Near Beaver Tailwater",
+        fish: ["Bait", "Trout tackle", "Reports", "Groceries"],
+        summary: "Best tackle-heavy stop for Beaver Tailwater days, especially if you want to know what is working around Parker Bend, Spider Creek, or Parker Bottoms.",
+        why: "The store publishes Beaver Tailwater reports and explicitly says to stop by for tackle, bait, and gear. It is the best specialty stop on the tailwater side of your trip.",
+        beginner: "Use this stop when you want trout-specific help before a Parker Bend, Bertrand, or Dam Site session.",
+        rules: [
+          "Shop marker only, not a separate fishing access.",
+          "Great for trout-focused tackle and local current conditions."
+        ],
+        alerts: [
+          "Hours can be seasonal.",
+          "More trout-specific than the other shops."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=8421+Highway+187%2C+Eureka+Springs%2C+AR+72631&travelmode=driving",
+        directions: "8421 Highway 187, Eureka Springs, AR 72631",
+        sourceLinks: [
+          { label: "Beaver Dam Store fishing report", url: "https://www.beaverdamstore.net/fishing" },
+          { label: "Beaver Dam Store contact", url: "https://www.beaverdamstore.net/contact" }
+        ]
+      },
+      {
+        id: "prairie-creek-store",
+        name: "Prairie Creek Marina Store",
+        lat: 36.3526943,
+        lng: -94.0536525,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~40-45 min from your stay",
+        crowd: "Reliable marina stop",
+        chair: "Store stop",
+        view: "Beaver Lake marina",
+        fish: ["Bait and tackle", "Snacks", "Fuel dock"],
+        summary: "A more verifiable Beaver Lake-side supply stop with an official marina store page that specifically mentions bait and tackle.",
+        why: "Prairie Creek Marina clearly lists bait and tackle on its official marina store page, so it is one of the easiest options to trust if you want a supply stop on the south Beaver Lake side.",
+        beginner: "Good backup stop if you decide to fish Prairie Creek or nearby Beaver Lake shore access and want a straightforward marina store.",
+        rules: [
+          "Shop marker only, not a separate fishing access.",
+          "Useful for Beaver Lake days more than White River trout days."
+        ],
+        alerts: [
+          "Farther from the cabin than Riverview or Beaver Dam Store.",
+          "Check hours before driving over."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=1+Prairie+Creek+Marina+Dr%2C+Rogers%2C+AR+72756&travelmode=driving",
+        directions: "1 Prairie Creek Marina Dr, Rogers, AR 72756",
+        sourceLinks: [
+          { label: "Prairie Creek Marina store page", url: "https://www.prairiecreekmarina.com/marina-store-fuel-dock/" },
+          { label: "Prairie Creek Marina home", url: "https://www.prairiecreekmarina.com/" }
+        ]
+      },
+      {
+        id: "lost-bridge-store",
+        name: "Lost Bridge Marina Store",
+        lat: 36.41068,
+        lng: -93.89536,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~25-30 min from your stay",
+        crowd: "Easy marina stop",
+        chair: "Store stop",
+        view: "Beaver Lake marina area",
+        fish: ["Fishing tackle", "Artificial bait", "Lake supplies"],
+        summary: "A well-documented marina store closer than Prairie Creek if you need Beaver Lake tackle and supplies.",
+        why: "Lost Bridge Marina's official site says its store carries fishing tackle and artificial bait, making it a stronger-verified option than a lot of general local listings.",
+        beginner: "Best for Beaver Lake days or if you want a marina stop with a broader general store feel.",
+        rules: [
+          "Shop marker only, not a separate fishing access.",
+          "Better for Beaver Lake tackle than White River trout-specific gear."
+        ],
+        alerts: [
+          "The official page mentions artificial bait, not live bait.",
+          "Good choice when you want stronger verification."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=12861+Marina+Rd%2C+Garfield%2C+AR+72732&travelmode=driving",
+        directions: "12861 Marina Rd, Garfield, AR 72732",
+        sourceLinks: [
+          { label: "Lost Bridge Marina about page", url: "https://lostbridgemarina.com/about/" },
+          { label: "Lost Bridge Marina home", url: "https://lostbridgemarina.com/" }
+        ]
+      },
+      {
+        id: "berryville-walmart",
+        name: "Berryville Walmart Fishing Dept.",
+        lat: 36.3558,
+        lng: -93.5765,
+        color: "#7b5bb7",
+        glyph: "🪱",
+        type: "shop",
+        quiet: 0,
+        easy: 5,
+        drive: "~30-35 min from your stay",
+        crowd: "Big-box backup",
+        chair: "Store stop",
+        view: "In-town errand stop",
+        fish: ["Tackle", "Basic fishing gear", "PowerBait and basics"],
+        summary: "Not charming, but very easy to verify and useful as a backup if the smaller bait shops are closed or you need basic gear fast.",
+        why: "Walmart's Berryville fishing department page is one of the easiest sources to verify online, and Berryville is a practical errand run from Eureka Springs.",
+        beginner: "Use this if you just need line, hooks, bobbers, PowerBait, or a cheap backup combo without having to wonder if a small shop is open.",
+        rules: [
+          "Shop marker only, not a fishing access.",
+          "Best for reliable basics rather than local river intel."
+        ],
+        alerts: [
+          "This is a gear backup, not a local fishing shop experience.",
+          "Live bait availability was not clearly stated on the page I found."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=1000+W+Trimble+Ave%2C+Berryville%2C+AR+72616&travelmode=driving",
+        directions: "1000 W Trimble Ave, Berryville, AR 72616",
+        sourceLinks: [
+          { label: "Walmart Berryville fishing store", url: "https://www.walmart.com/store/76-berryville-ar/fishing-store" }
+        ]
+      },
+      {
+        id: "prairie-creek",
+        name: "Beaver Lake Prairie Creek Pier",
+        lat: 36.3526943,
+        lng: -94.0536525,
+        color: "#c78f37",
+        glyph: "☀️",
+        type: "warm",
+        quiet: 3,
+        easy: 5,
+        drive: "~40-45 min from your stay",
+        crowd: "Moderate near the marina area",
+        chair: "Excellent if you want very easy setup",
+        view: "Big-water Beaver Lake scenery",
+        fish: ["Bass", "Crappie", "Bluegill", "Catfish", "Striped bass"],
+        summary: "Another easy-access comfort option, especially if you want the least complicated shore setup of the whole trip.",
+        why: "AGFC notes a handicapped-accessible fishing pier at Prairie Creek. It is not the most secluded spot, but it is one of the easiest places to fish comfortably from shore.",
+        beginner: "Try a small jig or live bait near the pier and pilings. If nothing is happening, this is still a comfortable place to practice casting and enjoy the water.",
+        rules: [
+          "No trout permit needed here.",
+          "Beaver Lake has special species-specific limits, so release fish unless you are sure of the rule.",
+          "Catch-and-release keeps this simple."
+        ],
+        alerts: [
+          "More amenities usually means more people.",
+          "Best treated as an easy backup rather than your primary solitude stop."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=1+Prairie+Creek+Marina+Dr%2C+Rogers%2C+AR+72756&travelmode=driving",
+        directions: "1 Prairie Creek Marina Dr, Rogers, AR 72756",
+        sourceLinks: [
+          { label: "AGFC public fishing areas", url: "https://www.agfc.com/fishing/where-to-fish/public-fishing-areas/" },
+          { label: "USACE Prairie Creek recreation page", url: "https://www.recreation.gov/camping/campgrounds/233577" }
+        ]
+      },
+      {
+        id: "kings-river",
+        name: "Kings River Rockhouse Access",
+        lat: 36.2816,
+        lng: -93.6641,
+        color: "#c78f37",
+        glyph: "☀️",
+        type: "warm",
+        quiet: 4,
+        easy: 3,
+        drive: "~45 min from your stay",
+        crowd: "Quietest if you want a river instead of a lake",
+        chair: "Best if you do not mind rougher ground",
+        view: "Clear Ozark river, gravel bars, bluff-and-forest scenery",
+        fish: ["Smallmouth bass", "Rock bass", "Sunfish"],
+        summary: "This is the most scenic warmwater river option on the map. I like it for a slower, more secluded day if you are comfortable with a slightly rougher access and simpler expectations.",
+        why: "AGFC's 2022 land-acquisition announcement identifies Rockhouse Access as part of this public corridor on the Kings River. That makes it a good option when you want a true Ozark river feel without the near-dam pressure of trout water.",
+        beginner: "Bring a chair only if you are okay with gravel and uneven footing. A small tube jig, inline spinner, or a worm near current breaks is plenty. For a first visit, think of it as a scenic practice day and release every bass.",
+        rules: [
+          "No trout permit needed here.",
+          "Special smallmouth rules apply on parts of the Kings River, so releasing all bass is the simplest legal approach.",
+          "Check river conditions if you plan to wade."
+        ],
+        alerts: [
+          "Access is rougher than the lake spots and less polished than Beaver Tailwater accesses.",
+          "This pin is approximate to the public Rockhouse Access area."
+        ],
+        mapLink: "https://www.google.com/maps/dir/?api=1&destination=36.2816%2C-93.6641&travelmode=driving",
+        directions: "36.2816,-93.6641",
+        sourceLinks: [
+          { label: "AGFC news on Rockhouse Access area", url: "https://www.agfc.com/news/arkansas-game-and-fish-commission-to-add-550-acres-of-high-quality-habitat-to-northwest-arkansas-wma/" },
+          { label: "AGFC game fish daily limits", url: "https://apps.agfc.com/regulations/detail/a42aa1e4-55c3-47ee-b321-52a2fc70f139/" }
+        ]
+      }
+    ];
+
+    const stay = {
+      lat: 36.4603,
+      lng: -93.8082,
+      mapLink: "https://www.google.com/maps/dir/?api=1&destination=486+County+Road+210%2C+Eureka+Springs%2C+AR+72632&travelmode=driving"
+    };
+
+    const stayMarker = L.marker([stay.lat, stay.lng], { icon: homeIcon })
+      .addTo(map)
+      .bindPopup('<strong>Your stay area</strong><br>486 Co Rd 210, Eureka Springs<br><small>Approximate CR-210 / White River corridor marker based on nearby verified addresses</small><br><a href="' + stay.mapLink + '" target="_blank" rel="noopener noreferrer">Google Maps</a>');
+
+    let locationMarker = null;
+    let currentFilter = "all";
+    const layers = new Map();
+
+    function buildSheet(spot) {
+      const eyebrow = spot.type === "trout" ? "Trout water" : spot.type === "quiet" ? "Quiet bank fishing" : "Scenic warmwater";
+      const eyebrowText = spot.type === "shop" ? "Bait and tackle" : eyebrow;
+      const fishHtml = spot.fish.map((fish) => `<span class="pill">${fish}</span>`).join("");
+      const rulesHtml = spot.rules.map((rule) => `<li>${rule}</li>`).join("");
+      const alertsHtml = spot.alerts.map((alert) => `<li>${alert}</li>`).join("");
+      const sourcesHtml = spot.sourceLinks.map((source) => `<li><a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.label}</a></li>`).join("");
+
+      document.getElementById("sheetInner").innerHTML = `
+        <div class="eyebrow">${eyebrowText}</div>
+        <h2>${spot.name}</h2>
+        <p class="meta">${spot.drive} • ${spot.crowd} • ${spot.view}</p>
+
+        <div class="score-grid">
+          <div class="score-card">
+            <span class="label">Quiet</span>
+            <span class="value">${"★".repeat(spot.quiet)}${"☆".repeat(5 - spot.quiet)}</span>
+          </div>
+          <div class="score-card">
+            <span class="label">Ease</span>
+            <span class="value">${"★".repeat(spot.easy)}${"☆".repeat(5 - spot.easy)}</span>
+          </div>
+          <div class="score-card">
+            <span class="label">Chair setup</span>
+            <span class="value">${spot.chair}</span>
+          </div>
+        </div>
+
+        <p class="body-copy">${spot.summary}</p>
+
+        <div class="action-row">
+          <a class="action-link" href="${spot.mapLink}" target="_blank" rel="noopener noreferrer">Google Maps</a>
+          <a class="action-link secondary" href="${spot.sourceLinks[0].url}" target="_blank" rel="noopener noreferrer">Primary source</a>
+        </div>
+
+        <div class="section-title">Why this fits</div>
+        <div class="callout good">${spot.why}</div>
+
+        <div class="section-title">Beginner setup</div>
+        <div class="callout rule">${spot.beginner}</div>
+
+        <div class="section-title">Likely fish</div>
+        <div class="pill-list">${fishHtml}</div>
+
+        <div class="section-title">Rules to remember</div>
+        <ul class="list">${rulesHtml}</ul>
+
+        <div class="section-title">Heads up</div>
+        <ul class="list">${alertsHtml}</ul>
+
+        <div class="section-title">Sources</div>
+        <ul class="source-list">${sourcesHtml}</ul>
+      `;
+
+      document.getElementById("sheet").classList.add("open");
+      document.getElementById("sheetOverlay").classList.add("open");
+    }
+
+    function closeSheet() {
+      document.getElementById("sheet").classList.remove("open");
+      document.getElementById("sheetOverlay").classList.remove("open");
+    }
+
+    function openRules() {
+      document.getElementById("rulesModal").classList.add("open");
+      document.getElementById("rulesOverlay").classList.add("open");
+    }
+
+    function closeRules(event) {
+      if (event && event.target !== document.getElementById("rulesOverlay")) {
+        return;
+      }
+      document.getElementById("rulesModal").classList.remove("open");
+      document.getElementById("rulesOverlay").classList.remove("open");
+    }
+
+    function toggleNoteLabel() {
+      const note = document.querySelector(".floating-note");
+      const label = document.getElementById("noteToggleLabel");
+      window.setTimeout(() => {
+        label.textContent = note.open ? "-" : "+";
+      }, 0);
+    }
+
+    function matchesFilter(spot, filter) {
+      if (filter === "all") return true;
+      if (filter === "trout") return spot.type === "trout";
+      if (filter === "quiet") return spot.quiet >= 4;
+      if (filter === "easy") return spot.easy >= 4;
+      if (filter === "warm") return spot.type === "warm" || spot.type === "quiet";
+      if (filter === "shops") return spot.type === "shop";
+      return true;
+    }
+
+    function renderMarkers() {
+      spots.forEach((spot) => {
+        const visible = matchesFilter(spot, currentFilter);
+        const layer = layers.get(spot.id);
+        if (visible && !map.hasLayer(layer)) {
+          layer.addTo(map);
+        } else if (!visible && map.hasLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      });
+    }
+
+    function fitAll() {
+      const visibleSpots = spots.filter((spot) => matchesFilter(spot, currentFilter));
+      const bounds = L.latLngBounds([[stay.lat, stay.lng]]);
+      visibleSpots.forEach((spot) => bounds.extend([spot.lat, spot.lng]));
+      map.fitBounds(bounds.pad(0.16));
+    }
+
+    function locateMe() {
+      if (!navigator.geolocation) {
+        alert("Location services are not available in this browser.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          if (locationMarker) {
+            map.removeLayer(locationMarker);
+          }
+
+          locationMarker = L.marker([lat, lng], {
+            icon: L.divIcon({
+              className: "",
+              iconSize: [18, 18],
+              iconAnchor: [9, 9],
+              html: '<div style="width:18px;height:18px;border-radius:50%;background:#2f7fb0;border:3px solid #fff;box-shadow:0 0 0 7px rgba(47,127,176,0.20);"></div>'
+            })
+          }).addTo(map).bindPopup("You are here");
+
+          map.setView([lat, lng], 12, { animate: true });
+          locationMarker.openPopup();
+        },
+        () => {
+          alert("Could not get your location. Make sure browser location access is turned on.");
+        }
+      );
+    }
+
+    spots.forEach((spot) => {
+      const marker = L.marker([spot.lat, spot.lng], {
+        icon: markerIcon(spot.color, spot.glyph)
+      }).bindPopup(`<strong>${spot.name}</strong><br>${spot.drive}<br><a href="${spot.mapLink}" target="_blank" rel="noopener noreferrer">Google Maps</a>`).on("click", () => {
+        buildSheet(spot);
+        map.panTo([spot.lat, spot.lng], { animate: true, duration: 0.4 });
+      });
+
+      layers.set(spot.id, marker);
+      marker.addTo(map);
+    });
+
+    document.querySelectorAll(".chip").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach((chip) => chip.classList.remove("active"));
+        button.classList.add("active");
+        currentFilter = button.dataset.filter;
+        renderMarkers();
+        closeSheet();
+        fitAll();
+      });
+    });
+
+    map.on("click", closeSheet);
+    fitAll();
+  </script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eureka Springs Fishing Reading List</title>
+  <style>
+    :root {
+      --pine: #183328;
+      --forest: #255744;
+      --river: #2f7fb0;
+      --sand: #f4efe5;
+      --paper: #fffdfa;
+      --ink: #1f2722;
+      --muted: #617068;
+      --gold: #c78f37;
+      --reddit: #ff6b35;
+      --blog: #4a8b5b;
+      --shadow: 0 16px 40px rgba(20, 31, 25, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(199, 143, 55, 0.18), transparent 28%),
+        linear-gradient(180deg, #edf3ee 0%, #f7f2e9 100%);
+      color: var(--ink);
+      padding: 0 0 40px;
+    }
+
+    header {
+      padding: 18px 16px 14px;
+      background: linear-gradient(135deg, var(--pine), var(--forest));
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(17, 34, 27, 0.2);
+    }
+
+    h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .subhead {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.84);
+      margin-bottom: 12px;
+      max-width: 44rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 13px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--pine);
+    }
+
+    main {
+      padding: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .note,
+    .card {
+      background: rgba(255, 253, 250, 0.96);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .note p,
+    .card p,
+    li {
+      font-size: 0.94rem;
+      line-height: 1.55;
+      color: #334039;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .badge.reddit {
+      background: #fff1eb;
+      color: #b6481f;
+    }
+
+    .badge.blog {
+      background: #edf6ef;
+      color: #28533b;
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 5px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 10px;
+    }
+
+    .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--pine);
+      color: #fff;
+    }
+
+    .links a.secondary {
+      background: #dfe9e1;
+      color: var(--pine);
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Eureka Fishing Reading</h1>
+    <p class="subhead">A small reading list for your trip: Reddit threads for practical bank-fishing perspective, plus local reports and blog-style write-ups that help make sense of Beaver Tailwater and the White River near Eureka Springs.</p>
+    <div class="actions">
+      <a class="btn primary" href="/Users/dfxstudio/Claude/index.html">Back to hub</a>
+      <a class="btn primary" href="/Users/dfxstudio/Claude/fishing-map.html">Back to map</a>
+      <a class="btn secondary" href="https://apps.agfc.com/mapper/?_gl=1*1pbjtgy*_gcl_au*Mjc0Njc5OTMzLjE3NzQ1NDQ3NDc.*_ga*NTk2ODkyNjAxLjE3NzQ1NDQ3NDg.*_ga_4C9QCEC47W*czE3NzQ2MjYzMDMkbzMkZzEkdDE3NzQ2Mjc3NzQkajQ3JGwwJGgw#8/34.780/-92.274" target="_blank" rel="noopener noreferrer">AGFC map</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="note">
+      <div class="section-title">Quick Takeaways</div>
+      <ul>
+        <li>I picked links that are helpful for a beginner deciding where to bank fish, what to expect on Beaver Tailwater, and how local anglers talk about generation, access, and simple rigs.</li>
+        <li>Reddit discussions consistently point visitors toward the Beaver Tailwater rather than generic Beaver Lake bank fishing if trout are the goal.</li>
+        <li>The same threads repeatedly warn that generation can kill wading options fast, which lines up with AGFC and the generation phone line.</li>
+        <li>Recent local reports still mention Parker Bottoms to Spider Creek and the lower river stretches as productive, which matches the lower-profile White River points already on your map.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Fishing on public waters in Eureka Springs</div>
+      <div class="meta">r/eurekasprings • September 26, 2024</div>
+      <p>Most useful for your trip because it is recent and local. The replies point people to Beaver Dam / White River trout water, mention that no guide is required, and specifically mention getting a license at Riverview Store near the Highway 62 bridge.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/1fqah87/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Bank fishing in ES area</div>
+      <div class="meta">r/eurekasprings • May 22, 2024</div>
+      <p>A useful short local thread because it is exactly your question: shore fishing with parking and access. The replies mention White River, Kings River, and Black Bass Lake, which lines up well with the public options already on your map.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/1cy7m9k/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Good fishing spots?</div>
+      <div class="meta">r/eurekasprings • October 22, 2020</div>
+      <p>Older, but still useful because locals point straight to White River / Beaver Tailwaters for trout and specifically reference the Beaver Dam Store report plus the release schedule. It is a nice quick confirmation that the obvious trout move near town is still the right one.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/jg47v1/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Eureka Springs - Any tips?</div>
+      <div class="meta">r/flyfishing • June 6, 2024</div>
+      <p>A short thread, but useful as a “where do I even start?” post from another visitor. It reinforces Beaver Tailwater as the obvious trout target near Eureka Springs and is a good sanity check if you want to compare your plan with what other travelers ask.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/flyfishing/comments/1d978i0/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Anyone familiar with fishing the White River below Beaver Dam?</div>
+      <div class="meta">r/flyfishing • November 22, 2022</div>
+      <p>Good practical reading on what actually works when people struggle there: getting deeper, simple indicator rigs, and keeping an eye on generation. Even though it leans fly-fishing, the bigger lesson is that Beaver Tailwater often rewards simple presentations and attention to water level more than fancy technique.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/flyfishing/comments/z1k3at/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">New to fly fishing in Arkansas</div>
+      <div class="meta">r/flyfishing • August 5, 2025</div>
+      <p>Helpful because the replies explain how to read the generation chart in plain language. That is one of the biggest beginner pain points for this exact fishery, especially if you are bank fishing and not floating.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/flyfishing/comments/1mif8l5/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Tailwater Fishing - Help Please</div>
+      <div class="meta">r/flyfishing • November 10, 2019</div>
+      <p>Older, but still helpful for understanding the big question new anglers run into here: what changes when the dam is generating. The replies make it clear that bank and wading access shrink quickly once flow comes up, which is why your map keeps pushing the generation check line so hard.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/flyfishing/comments/duhuqh/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Fishing in Beaver Lake?</div>
+      <div class="meta">r/Arkansas • May 21, 2023</div>
+      <p>Worth including because one of the most practical replies says bank fishing Beaver Lake is not easy for beginners and specifically tells people to try the Beaver Tailwaters near Eureka with public access points, trout spoons, worms, and PowerBait. That advice lines up very well with your trip style.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/Arkansas/comments/13nek75/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Local Report</div>
+      <div class="title">Beaver Dam Store Fishing Report</div>
+      <div class="meta">Current local report page</div>
+      <p>This is one of the best practical pages for your exact trip because it names current productive stretches and bait choices. It recently called out gravel shoals below Parker Bottoms down to Spider Creek, which is exactly why those lower-profile White River markers are on your map.</p>
+      <div class="links">
+        <a href="https://www.beaverdamstore.net/fishing" target="_blank" rel="noopener noreferrer">Open report</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Guide Site</div>
+      <div class="title">NWATROUT White River / Beaver Tailwaters overview</div>
+      <div class="meta">Guide write-up • recent crawl</div>
+      <p>Useful as a readable overview of how locals frame the fishery: White River below Beaver Dam, meeting at Beaver Dam Store, and the general skill level expected. It is obviously a guide page, but it is still a clean orientation read if you want a simple mental map before you go.</p>
+      <div class="links">
+        <a href="https://nwatrout.com/" target="_blank" rel="noopener noreferrer">Open site</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Guide Site</div>
+      <div class="title">Busch Mountain Fishing Guide</div>
+      <div class="meta">Local guide site • recent crawl</div>
+      <p>This one is useful mainly because it anchors a real White River-side local business and references a boat ramp lot at the end of CR 214, which helps make the downstream White River corridor feel more legible when you are looking at side roads near your cabin area.</p>
+      <div class="links">
+        <a href="https://www.buschmountainfishing.net/" target="_blank" rel="noopener noreferrer">Open site</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Area Guide</div>
+      <div class="title">Float Eureka: The White River</div>
+      <div class="meta">Area write-up • recent crawl</div>
+      <p>Not a fishing article first, but useful because it plainly describes the float from just below Beaver Dam to Houseman Access and reinforces how the river is commonly segmented in this area. That helps when you are trying to understand how your river access points relate to each other.</p>
+      <div class="links">
+        <a href="https://www.floateurekasprings.com/kayak-canoe-paddleboard-rentals/the-white-river" target="_blank" rel="noopener noreferrer">Open article</a>
+      </div>
+    </section>
+
+    <section class="note">
+      <div class="section-title">Best Reads First</div>
+      <ul>
+        <li>Start with the local Reddit thread from r/eurekasprings.</li>
+        <li>Then read the Beaver Dam Store report for current stretch and bait ideas.</li>
+        <li>If you want more context on generation and bank-fishing limitations, read the two fly-fishing Reddit threads next.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

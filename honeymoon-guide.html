@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eureka Springs — A Honeymoon Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --warm-white: #faf7f2;
+    --forest: #2d3d2e;
+    --sage: #7a9e7e;
+    --sage-light: #a8c5ac;
+    --blush: #c9907a;
+    --blush-light: #e8c4b8;
+    --gold: #b8934a;
+    --gold-light: #d4b07a;
+    --charcoal: #2a2622;
+    --mid: #5c5248;
+    --muted: #9a8f84;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--warm-white);
+    color: var(--charcoal);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  .hub-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 300;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 14px;
+    border-radius: 999px;
+    text-decoration: none;
+    background: rgba(45, 61, 46, 0.88);
+    color: var(--cream);
+    border: 1px solid rgba(184,147,74,0.22);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 28px rgba(20, 26, 20, 0.22);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* —— HERO —— */
+  .hero {
+    position: relative;
+    height: 82vh;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--forest);
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(122,158,126,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 20% 20%, rgba(184,147,74,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 80% 10%, rgba(201,144,122,0.12) 0%, transparent 60%);
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .hero-ornament {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+  }
+  .hero-ornament::before {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(184,147,74,0.12);
+    border-radius: 50%;
+    width: 380px; height: 380px; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+  .hero-ornament::after { display: none; }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 1rem 2rem;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  /* —— GOBO —— */
+  .hero-gobo-wrap {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(184,147,74,0.4);
+    margin: 0 auto 1.2rem;
+    background: #fff;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.1s both;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 0 50px rgba(184,147,74,0.18), 0 0 0 6px rgba(184,147,74,0.06);
+  }
+  .hero-gobo-wrap object,
+  .hero-gobo-wrap embed {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(212,176,122,0.7);
+    margin-bottom: 0.9rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s both;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 7vw, 5.8rem);
+    line-height: 0.92;
+    color: var(--cream);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s both;
+  }
+  .hero h1 em { font-style: italic; color: var(--sage-light); display: block; letter-spacing: 0.04em; }
+
+  /* —— HERO BOTANICAL ORNAMENT —— */
+  .hero-botanical {
+    display: block;
+    margin: 0.5rem auto 0.8rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.65s both;
+  }
+
+  .hero-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-top: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.85s both;
+  }
+
+  .hero-divider {
+    width: 40px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0.9rem auto;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.75s both;
+  }
+
+  .hero-tagline { display: none; }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.1s both;
+    cursor: pointer;
+    z-index: 2;
+  }
+  .hero-scroll span { font-size: 0.55rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(245,240,232,0.3); }
+
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+
+  /* —— NAV —— */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--forest);
+    border-bottom: 1px solid rgba(184,147,74,0.2);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-link {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.55);
+    text-decoration: none;
+    padding: 1.1rem 1.4rem;
+    white-space: nowrap;
+    transition: color 0.3s, border-bottom 0.3s;
+    border-bottom: 2px solid transparent;
+    font-weight: 400;
+  }
+  .nav-link:hover { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+  /* —— SECTION STRUCTURE —— */
+  section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+  .section-header { text-align: center; margin-bottom: 4rem; }
+
+  .section-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 400;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--forest);
+  }
+  .section-title em { font-style: italic; color: var(--sage); }
+
+  .section-rule { width: 40px; height: 1px; background: var(--gold); margin: 1.5rem auto; }
+
+  .section-intro { font-size: 1rem; line-height: 1.8; color: var(--mid); max-width: 620px; margin: 0 auto; }
+
+  /* —— DIVIDER —— */
+  .full-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, rgba(122,158,126,0.3), transparent);
+    margin: 0;
+  }
+
+  /* —— DARK SECTION —— */
+  .dark-section { background: var(--forest); padding: 6rem 2rem; margin: 0; }
+  .dark-section .section-title { color: var(--cream); }
+  .dark-section .section-intro { color: rgba(245,240,232,0.65); }
+
+  /* —— CARDS —— */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+    background: rgba(122,158,126,0.15);
+    border: 1px solid rgba(122,158,126,0.15);
+  }
+
+  .card { background: var(--warm-white); padding: 2.5rem; position: relative; transition: background 0.3s; overflow: hidden; }
+  .card:hover { background: var(--cream); }
+
+  /* Card photo header — replaces emoji icon */
+  .card-icon {
+    display: block;
+    margin: -2.5rem -2.5rem 1.5rem -2.5rem;
+    height: 190px;
+    overflow: hidden;
+    font-size: 0;
+    background: var(--sage);
+  }
+  .card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .card:hover .card-icon img { transform: scale(1.04); }
+
+  .card-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
+  }
+
+  /* —— LOCATION LINKS —— */
+  .card-title a,
+  .location-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184,147,74,0.35);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .card-title a:hover,
+  .location-link:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  /* dark card variant overrides */
+  .card.dark .card-title a:hover { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+  /* feature card heading link */
+  .feature-title-link {
+    color: var(--cream);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(212,176,122,0.35);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .feature-title-link:hover { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+
+  .card-meta { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .card-body { font-size: 0.9rem; line-height: 1.75; color: var(--mid); }
+  .card-tip {
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(184,147,74,0.2);
+    font-size: 0.8rem;
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .card.dark { background: rgba(255,255,255,0.05); }
+  .card.dark:hover { background: rgba(255,255,255,0.09); }
+  .card.dark .card-title { color: var(--cream); }
+  .card.dark .card-body { color: rgba(245,240,232,0.65); }
+  .card.dark .card-tip { color: var(--gold-light); border-color: rgba(184,147,74,0.25); }
+  .card.dark .card-icon { background: rgba(45,61,46,0.8); }
+
+  /* —— FEATURE CARD —— */
+  .feature-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--forest);
+    margin-bottom: 2px;
+  }
+  .feature-card.reverse { direction: rtl; }
+  .feature-card.reverse > * { direction: ltr; }
+
+  .feature-visual {
+    background: var(--sage);
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .feature-card:hover .feature-visual img { transform: scale(1.04); }
+  .feature-visual-bg { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%); }
+
+  .feature-content { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+
+  @media (max-width: 680px) {
+    .feature-card { grid-template-columns: 1fr; }
+    .feature-visual { min-height: 180px; }
+  }
+
+  /* —— HIGHLIGHT STRIP —— */
+  .highlight-strip { background: var(--blush-light); padding: 4rem 2rem; text-align: center; }
+  .highlight-strip .section-title { color: var(--forest); }
+
+  .tips-row { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; max-width: 900px; margin: 2.5rem auto 0; }
+
+  .tip-pill {
+    background: white;
+    border: 1px solid rgba(201,144,122,0.3);
+    padding: 1.2rem 1.8rem;
+    font-size: 0.85rem;
+    color: var(--mid);
+    line-height: 1.6;
+    flex: 1;
+    min-width: 220px;
+    max-width: 280px;
+    text-align: left;
+  }
+  .tip-pill strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--forest);
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+  }
+
+  /* —— ITINERARY —— */
+  .itinerary { max-width: 720px; margin: 0 auto; }
+
+  .day-block {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+  }
+  .day-block::before {
+    content: '';
+    position: absolute;
+    left: 39px; top: 2rem; bottom: -3rem;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .day-block:last-child::before { display: none; }
+
+  .day-label { text-align: center; padding-top: 0.2rem; }
+  .day-number { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--sage); line-height: 1; display: block; }
+  .day-word { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .day-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin: 0.5rem auto 0; }
+
+  .day-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; color: var(--forest); margin-bottom: 0.5rem; }
+  .day-body { font-size: 0.9rem; line-height: 1.8; color: var(--mid); }
+  .day-body strong { color: var(--charcoal); font-weight: 500; }
+  .day-body a { color: var(--sage-light); text-decoration: none; border-bottom: 1px solid rgba(168,197,172,0.4); transition: color 0.2s; }
+  .day-body a:hover { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+
+  /* —— FOOTER —— */
+  footer { background: var(--charcoal); padding: 3rem 2rem; text-align: center; }
+  .footer-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; font-style: italic; color: var(--cream); margin-bottom: 0.5rem; }
+  .footer-sub { font-size: 0.75rem; color: rgba(245,240,232,0.35); letter-spacing: 0.15em; }
+
+  /* —— ANIMATIONS —— */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50%       { opacity: 1;   transform: scaleY(1.1); }
+  }
+
+  /* —— BADGES —— */
+  .badge { display: inline-block; font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid; font-weight: 400; margin-left: 0.5rem; vertical-align: middle; position: relative; top: -2px; }
+  .badge-blush { border-color: var(--blush); color: var(--blush); }
+  .badge-sage  { border-color: var(--sage);  color: var(--sage); }
+  .badge-gold  { border-color: var(--gold);  color: var(--gold); }
+
+  /* —— QUOTE —— */
+  .pull-quote { max-width: 700px; margin: 3rem auto; text-align: center; padding: 3rem 2rem; border-top: 1px solid rgba(122,158,126,0.2); border-bottom: 1px solid rgba(122,158,126,0.2); }
+  .pull-quote p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.4rem, 3vw, 2rem); color: var(--forest); line-height: 1.5; font-weight: 300; }
+  .pull-quote cite { display: block; margin-top: 1rem; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-style: normal; }
+
+  /* —— RESPONSIVE —— */
+  @media (max-width: 600px) {
+    nav { justify-content: flex-start; }
+    .cards-grid { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+    .hero-gobo-wrap { width: 150px; height: 150px; }
+    .hero-botanical { width: 200px; }
+  }
+</style>
+</head>
+<body>
+
+<a class="hub-link" href="/Users/dfxstudio/Claude/index.html">Back to hub</a>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-ornament"></div>
+  <div class="hero-content">
+    <div class="hero-gobo-wrap">
+      <img src="Wedding_Gobo_01.png" alt="Madeline & Clay" style="width:100%; height:100%; object-fit:cover; display:block;">
+    </div>
+    <p class="hero-eyebrow">A Honeymoon Guide</p>
+    <h1>Eureka<em>Springs</em></h1>
+    <!-- Botanical branch ornament matching the gobo line-art style -->
+    <svg class="hero-botanical" width="260" height="22" viewBox="0 0 260 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="130" cy="11" r="1.5" fill="rgba(184,147,74,0.45)"/>
+      <line x1="127" y1="11" x2="10" y2="11" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 48 11 L 34 4" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 48 11 L 32 18" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 72 11 L 56 3" stroke="rgba(184,147,74,0.22)" stroke-width="0.5"/>
+      <path d="M 72 11 L 53 20" stroke="rgba(184,147,74,0.22)" stroke-width="0.5"/>
+      <path d="M 96 11 L 84 5" stroke="rgba(184,147,74,0.16)" stroke-width="0.5"/>
+      <path d="M 96 11 L 82 17" stroke="rgba(184,147,74,0.16)" stroke-width="0.5"/>
+      <line x1="133" y1="11" x2="250" y2="11" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 212 11 L 226 4" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 212 11 L 228 18" stroke="rgba(184,147,74,0.28)" stroke-width="0.5"/>
+      <path d="M 188 11 L 204 3" stroke="rgba(184,147,74,0.22)" stroke-width="0.5"/>
+      <path d="M 188 11 L 207 20" stroke="rgba(184,147,74,0.22)" stroke-width="0.5"/>
+      <path d="M 164 11 L 176 5" stroke="rgba(184,147,74,0.16)" stroke-width="0.5"/>
+      <path d="M 164 11 L 178 17" stroke="rgba(184,147,74,0.16)" stroke-width="0.5"/>
+    </svg>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">Arkansas · The Ozarks</p>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('intro').scrollIntoView({behavior:'smooth'})">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-link" href="#homebase">Your Cabin</a>
+  <a class="nav-link" href="#sights">Sights</a>
+  <a class="nav-link" href="#spa">Spa & Wellness</a>
+  <a class="nav-link" href="#dining">Dining</a>
+  <a class="nav-link" href="#wine">Wine</a>
+  <a class="nav-link" href="#outdoors">Outdoors</a>
+  <a class="nav-link" href="#entertainment">Entertainment</a>
+  <a class="nav-link" href="#unique">Only in Eureka</a>
+  <a class="nav-link" href="#daytrips">Day Trips</a>
+  <a class="nav-link" href="#itinerary">Sample Days</a>
+  <a class="nav-link" href="#tips">Good to Know</a>
+</nav>
+
+<!-- YOUR CABIN / HOME BASE -->
+<div id="homebase" style="background:var(--warm-white); padding:6rem 2rem; border-bottom: 1px solid rgba(184,147,74,0.15);">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">Your Home Base</p>
+      <h2 class="section-title">From <em>Your Doorstep</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Your cabin at <strong style="color:var(--forest); font-weight:400;">486 CR-210</strong> sits about 5 miles west of downtown Eureka Springs — close enough to everything, far enough from everything. Blue Spring Heritage Center is literally on your road. Beaver Lake trout fishing and Thorncrown Chapel are both under 15 minutes. Here's what's within easy reach.</p>
+    </div>
+
+    <!-- CABIN PHOTOS -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:2rem 0 3.5rem;">
+      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <img src="IMG_8270.jpg" alt="Cabin exterior at sunset" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <img src="IMG_8271.jpg" alt="Cabin interior with fireplace" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <img src="IMG_8272.jpg" alt="Ozark river valley views" style="width:100%; height:100%; object-fit:cover; display:block;">
+      </div>
+    </div>
+
+    <!-- FISHING -->
+    <div style="margin-bottom:0.5rem;">
+      <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:1.5rem; text-align:center;">Fishing</p>
+      <div class="cards-grid" style="margin-bottom:2px;">
+        <div class="card">
+          <span class="card-icon"><img src="White%20River%20Tailwater%20%E2%80%94%20Parker%20Bend%20.jpg" alt="White River trout fishing" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Trout · World-Class</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Beaver+Tailwater+trout+fishing+Parker+Bend+Access+Arkansas" target="_blank" rel="noopener">White River Tailwater — Parker Bend</a></h3>
+          <p class="card-meta">Hwy 187 near Beaver Dam · ~10 min from cabin</p>
+          <p class="card-body">The White River below Beaver Dam is one of the finest tailwater trout fisheries in the mid-South — cold, clear water releasing from the bottom of the dam produces year-round rainbow, brown, and cutthroat trout. Parker Bend Access has walk-in bank fishing with handicap-accessible ramps and is an artificial-lures-only zone, which means the water stays uncrowded and the fish are quality. A guided half-day with a local trout guide makes for an exceptional morning even if neither of you has cast before.</p>
+          <p class="card-tip">✦ NWATROUT Guide Service is based locally — a half-day float puts you on water most anglers never access from the bank.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="Beaver%20Lake%20fishing%20Dam%20Site%20Park%20Eureka%20Springs%20Arkansas.webp" alt="Beaver Lake fishing" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Bass · Crappie · Catfish</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Beaver+Lake+fishing+Dam+Site+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Beaver Lake — Dam Site Park</a></h3>
+          <p class="card-meta">348 Damsite River Rd · ~10 min from cabin</p>
+          <p class="card-body">Beaver Lake's 480 miles of shoreline hold largemouth, smallmouth, and striped bass alongside walleye, crappie, and catfish. Dam Site Park is the closest public boat launch to your cabin — multiple ramps, solid bank-fishing access, and a beautiful setting right at the lake's narrowest point near the dam. Lost Bridge Marina and Starkey Marina, both nearby, offer boat and kayak rentals if you want to get out on the water without your own gear.</p>
+          <p class="card-tip">✦ Early morning bass fishing in the coves off Dam Site is exceptional in spring and fall — pack a thermos and arrive at first light.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="black%20bass%20lake.jpg" alt="Black Bass Lake" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Smallmouth · Bluegill · Quiet</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Black+Bass+Lake+fishing+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Black Bass Lake</a></h3>
+          <p class="card-meta">Just outside Eureka Springs · ~10 min from cabin</p>
+          <p class="card-body">A small, spring-fed lake tucked just outside of town and largely overlooked by visitors. Non-motorized boats only, which keeps it peaceful. The shoreline is forested and the water is remarkably clear for an Ozark lake. Smallmouth bass, largemouth, spotted bass, and bluegill all live here. The surrounding trails (Black Bass Lake Trail, 1.8 miles) make it easy to combine an hour of fishing with a short walk. One of those quiet, unhurried places that honeymoons are made for.</p>
+          <p class="card-tip">✦ Bring a small kayak or canoe if you have access to one — the lake is best experienced from the water at your own pace.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Cloudy_Beaver_Lake_at_Lost_Bridge_Marina.jpg" alt="Lost Bridge Marina" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Beaver Lake · Boat Rentals</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Lost+Bridge+Marina+Beaver+Lake+boat+rental+Arkansas" target="_blank" rel="noopener">Lost Bridge Marina — Beaver Lake</a></h3>
+          <p class="card-meta">1966 Lost Bridge Rd · ~15 min from cabin</p>
+          <p class="card-body">Lost Bridge Marina sits on one of the most scenic coves of Beaver Lake and rents pontoon boats, fishing boats, and kayaks by the hour or day — no trailer, no prior experience needed. From the water you can fish the coves and timber lines that hold largemouth and smallmouth bass, or simply drift and take in 480 miles of undeveloped Ozark shoreline. It's one of the most accessible ways to experience Beaver Lake without your own gear, and a slow morning on the water here is genuinely restorative.</p>
+          <p class="card-tip">✦ Book a pontoon for an afternoon float — fishing or not, it's one of the most relaxing ways to spend a few hours together.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="WhiteRiver.webp" alt="Kings River Arkansas" onerror="this.style.display='none'"></span>
+          <p class="card-tag">National Scenic River · Smallmouth</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Kings+River+Arkansas+smallmouth+bass+fishing" target="_blank" rel="noopener">Kings River</a></h3>
+          <p class="card-meta">Marble access, Carroll County · ~45 min from cabin</p>
+          <p class="card-body">The Kings River is Arkansas's only National Scenic River — a crystal-clear, spring-fed Ozark stream that winds through remote limestone bluffs and old-growth forest. It's revered by smallmouth bass anglers as one of the finest wade-fishing streams in the region, with miles of river that feel genuinely wild. Canoe and kayak float trips are possible from various access points, and guided float fishing trips are available if you want a seasoned hand on the oars. The river valley itself is beautiful enough to justify the drive even if you never pick up a rod.</p>
+          <p class="card-tip">✦ The Marble access area is the most scenic put-in point — a float from Marble to Trigger Gap is a classic half-day trip.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="White%20River%20guided%20trout%20fishing%20float%20trip%20Eureka%20Springs%20Arkansas.jpg" alt="White River guided fly fishing" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Guided Float · Trout</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=White+River+guided+trout+fishing+float+trip+Eureka+Springs+Arkansas" target="_blank" rel="noopener">White River Guided Float Trip</a></h3>
+          <p class="card-meta">Beaver Dam tailwater · ~10–15 min from cabin</p>
+          <p class="card-body">While the Parker Bend access is great for self-guided bank fishing, a guided float trip on the White River tailwater is in a different class entirely. A local guide rows a drift boat through stretches of river that bank anglers can never reach, reading water and putting you in front of fish all morning. The White River consistently produces rainbow and brown trout in the 18–24 inch range, and several local guide services specialize in getting beginners on fish quickly. Even if neither of you has flyfished before, a half-day guided float is one of those experiences that stays with you.</p>
+          <p class="card-tip">✦ Ask your guide specifically about dry-fly fishing in the evening — watching a trout rise to a dry fly at dusk is one of the great things in fishing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HIKING -->
+    <div style="margin-bottom:0.5rem; margin-top:3rem;">
+      <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:1.5rem; text-align:center;">Hiking</p>
+      <div class="cards-grid" style="margin-bottom:2px;">
+        <div class="card">
+          <span class="card-icon"><img src="http://bluespringheritage.com/photos/slides/bluff.jpg" alt="Blue Spring Heritage Center" onerror="this.style.display='none'"></span>
+          <p class="card-tag">On Your Road · Can't Miss</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Blue+Spring+Heritage+Center+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Blue Spring Heritage Center</a></h3>
+          <p class="card-meta">1537 CR-210 · Literally on your road · ~5 min</p>
+          <p class="card-body">One of the most beautiful and underrated spots in all of northwest Arkansas, Blue Spring pumps 38 million gallons of crystal-blue water per day from the Ozark aquifer through 33 acres of native gardens and woodland. The property has deep Cherokee history — it sits along the Trail of Tears — and the walking trail through the gardens is short, serene, and genuinely stunning. The blue of the water against the green of the forest is a color combination that photographs do not do justice. Come in the morning when the light is right and you'll have the place nearly to yourselves.</p>
+          <p class="card-tip">✦ Open spring through fall — check seasonal hours before going. It's on your road, so no excuses not to walk over at least once.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Lake_Leatherwood_Park_Historic_District%2C_Cabins.JPG" alt="Lake Leatherwood trails" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Lake Loop · Easy</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Lake+Leatherwood+trails+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Lake Leatherwood City Park</a></h3>
+          <p class="card-meta">~10 min from cabin · 25+ miles of trails</p>
+          <p class="card-body">Lake Leatherwood's trail system is the crown jewel of Eureka Springs' outdoor offerings. The Beacham + Fuller Trail makes a flat, 4.2-mile loop around the 85-acre lake, crossing a beautiful long walking bridge and passing an 1890s hand-cut limestone dam. For something shorter, the Eureka Springs Overlook Loop (2.7 miles, easy) delivers bluff views over the dam that are especially beautiful at golden hour. The Hyde Hollow Trail winds through forest with creek crossings and is quiet enough on a weekday morning that you may not see another soul.</p>
+          <p class="card-tip">✦ The lake-loop walk followed by a picnic on the dam is one of the best free afternoons in the area.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="https://www.arkansasstateparks.com/sites/default/files/styles/listing_images/public/2025-10/e8b2d7d36b8d3ff410341071bc472eb3_CZP_8545.jpeg?itok=V_AjkFMb" alt="Hobbs State Park hiking" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Bluff Views · Beaver Lake</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Hobbs+State+Park+Dogwood+Trail+Beaver+Lake+Arkansas" target="_blank" rel="noopener">Hobbs State Park — Dogwood Trail</a></h3>
+          <p class="card-meta">~20 min from cabin · Free admission</p>
+          <p class="card-body">Arkansas's largest state park wraps around the south shore of Beaver Lake with over 54 miles of trails. The Dogwood Trail is the standout for first-timers: it starts at a Beaver Lake overlook, passes one of the largest rock overhangs in the region, and moves through mixed hardwood forest with small seasonal waterfalls. It's moderate in difficulty and rewards you with the kind of views that make you understand why this corner of the Ozarks is special. On a clear morning the lake views from the bluffs are extraordinary.</p>
+          <p class="card-tip">✦ Pair with a Keels Creek Winery stop on your way back — they're practically en route.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="https://pivotrockpark.com/wp-content/uploads/2023/05/Pivot-Rock-at-Pivot-Rock-Park.jpg" alt="Pivot Rock natural bridge" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Geological Oddity · Free</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Pivot+Rock+Natural+Bridge+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Pivot Rock and Natural Bridge</a></h3>
+          <p class="card-meta">Pivot Rock Rd off Hwy 62 · ~10 min from cabin</p>
+          <p class="card-body">One of the stranger geological curiosities in the Ozarks: a massive boulder balanced on a single narrow point, surrounded by other unusual sandstone formations and a small natural bridge. The short walking path through this private nature preserve takes about 30 minutes and passes formations that look more like sculpture than nature. It's a modest and quiet attraction — far from a theme park — but its understated charm makes it a perfect quick excursion on the way back from somewhere else. The natural bridge is genuinely beautiful and almost no one outside of locals seems to know it's here.</p>
+          <p class="card-tip">✦ Small admission fee applies. The bridge itself is just a short walk from the parking area — don't rush it.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="Eureka-Springs-Historic-Loop-Walking-tour.jpeg" alt="Historic Loop Walking Tour" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Self-Guided · Historic</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Eureka+Springs+Historic+Loop+Walking+Tour+Arkansas" target="_blank" rel="noopener">Historic Loop Walking Tour</a></h3>
+          <p class="card-meta">Start at Basin Spring Park · ~15 min from cabin</p>
+          <p class="card-body">Eureka Springs has no flat streets — the entire town climbs and winds through a limestone hillside, and the best way to understand it is on foot. The Historic Loop follows the three main loop roads (Lower, Middle, and Upper) that ring the hillside, passing the finest concentration of Victorian architecture in Arkansas, hidden staircases, old spring houses, and lookout points that open up suddenly to views of the valley below. Pick up a walking tour map from the visitor center or download one online. Budget two to three hours and wear comfortable shoes — the elevation changes are real.</p>
+          <p class="card-tip">✦ The stone staircases connecting the loops are one of the town's best secrets — look for them between buildings. Some pass directly through private gardens.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="White_Rock_Mountain.avif" alt="White Rock Mountain overlook" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Ozark Summit · Panoramic Views</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=White+Rock+Mountain+Ozark+National+Forest+Arkansas+hiking" target="_blank" rel="noopener">White Rock Mountain — Ozark National Forest</a></h3>
+          <p class="card-meta">Ozone, AR · ~1 hour from cabin · Free</p>
+          <p class="card-body">For couples willing to drive an hour into the Ozark National Forest, White Rock Mountain rewards with some of the most expansive 360-degree views in all of Arkansas. The summit sits at 2,260 feet and is ringed by a stone observation trail that walks around the entire bluff edge, offering unobstructed views across ridgeline after ridgeline of rolling hardwood forest. There are rustic rental cabins at the summit for those who want to stay overnight. The drive itself through the national forest is beautiful in all seasons — particularly spectacular in fall foliage season (mid-October).</p>
+          <p class="card-tip">✦ The summit is worth a full morning — pack a picnic and spend time on the bluff trail before heading back. In fall, plan specifically for this.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DINING NEAR CABIN -->
+    <div style="margin-bottom:0.5rem; margin-top:3rem;">
+      <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:1.5rem; text-align:center;">Dining Near Your Cabin</p>
+      <div class="cards-grid" style="margin-bottom:2px;">
+        <div class="card">
+          <span class="card-icon"><img src="Gaskins%20Cabin%20Steakhouse.jpg" alt="Gaskins Cabin Steakhouse" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Steakhouse · Most Romantic</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Gaskins+Cabin+Steakhouse+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Gaskins Cabin Steakhouse</a></h3>
+          <p class="card-meta">2883 Hwy 23 North · ~15 min · Wed–Sun from 5 PM</p>
+          <p class="card-body">Built around an authentic 1864 log cabin, Gaskins is the most romantic dinner option close to your cabin that isn't in downtown Eureka Springs. The atmosphere is candlelit and intimate — rough-hewn timber walls, stone fireplace, the sense that the building has stories to tell. The menu is built around prime rib, hand-cut steaks, and a strong wine list. It has been repeatedly voted the best steakhouse in the area for years running. Reservations are strongly recommended, especially on weekends — this is the kind of place that fills up with couples celebrating anniversaries and proposals.</p>
+          <p class="card-tip">✦ Order the prime rib if it's available. Call at least a day ahead for weekend reservations.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="ErmiliosItalianHomeCooking.jpeg" alt="Ermilios Italian restaurant" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Italian · Local Institution</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Ermilios+Italian+Home+Cooking+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Ermilio's Italian Home Cooking</a></h3>
+          <p class="card-meta">26 White St, Eureka Springs · ~15 min · Nightly 4–8 PM</p>
+          <p class="card-body">A beloved Eureka Springs institution tucked into a historic home on the Upper Historic Loop. Ermilio's has been serving house-made pasta, red sauces, and Italian-American comfort food for decades. Every meal begins with fresh bread, salad, and roasted garlic — a ritual that sets the tone for an unhurried, generous evening. There are no reservations; it's first-come, first-served, which means arriving by 4 or 4:30 is wise. The lack of pretension is part of the charm — this is the kind of place that locals quietly love and visitors immediately understand.</p>
+          <p class="card-tip">✦ No reservations taken — arrive at opening to avoid a wait. BYOB is allowed, so stop for wine on the way.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="Rowdy%20Beaver%20tavern.webp" alt="Rowdy Beaver tavern" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Casual · Live Music</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Rowdy+Beaver+Restaurant+Tavern+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Rowdy Beaver Restaurant & Tavern</a></h3>
+          <p class="card-meta">417 W Van Buren · ~10 min · Open daily from 11 AM</p>
+          <p class="card-body">The closest full-service restaurant to your cabin — sitting right on Hwy 62 on the western approach to Eureka Springs, practically on your route into town. The Rowdy Beaver is a relaxed roadhouse with steaks, pulled pork, ribs, burgers, and a full bar. Outdoor seating and regular live music make it an easy and enjoyable stop for a casual lunch or a low-key dinner when you don't want to commit to a reservation-required evening out. Good local beer selection and the staff are warm and unhurried.</p>
+          <p class="card-tip">✦ The outdoor patio on a warm evening with live music is the most natural way to wind down a day of hiking or fishing.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="https://mudstreetcafe.com/graphics/header.jpg" alt="Mud Street Cafe breakfast" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Breakfast · Brunch · Beloved</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Mud+Street+Cafe+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Mud Street Café</a></h3>
+          <p class="card-meta">22 S Main St · Downtown · ~15 min · Breakfast & Lunch</p>
+          <p class="card-body">Tucked into a basement space beneath downtown Eureka Springs' main street, Mud Street Café is the town's most beloved breakfast and brunch spot — a warm, wood-paneled room with exposed stone walls, mismatched furniture, and the feeling of a place that's been part of the community's daily rhythm for years. The menu leans toward hearty, well-sourced morning fare: eggs Benedict, omelets, house pastries, good strong coffee. It fills quickly on weekends — arrive early or expect a short wait that is entirely worth it. This is where locals go on Sunday mornings.</p>
+          <p class="card-tip">✦ Arrive at or before opening on weekends. The mushroom and brie omelet and the house-made cinnamon roll are both standouts.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="LocalFlavorCafePatio.webp" alt="Local Flavor Cafe patio" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Casual · Local Lunch</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Local+Flavor+Cafe+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Local Flavor Café</a></h3>
+          <p class="card-meta">71 S Main St · Downtown · ~15 min · Lunch daily</p>
+          <p class="card-body">A cheerful, laid-back café on Main Street serving fresh soups, generous sandwiches, and light plates with an emphasis on local and seasonal ingredients. Local Flavor is the kind of place you wander into after a morning of exploring the historic district — the menu changes seasonally and the kitchen takes its sourcing seriously without taking itself too seriously. The outdoor patio is one of the most pleasant spots for a midday meal in town, especially when the weather cooperates. A perfect, unhurried lunch before an afternoon at Lake Leatherwood or a wine tasting.</p>
+          <p class="card-tip">✦ The daily soup and half-sandwich combo is reliably good. Check the chalkboard for seasonal specials not on the printed menu.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon"><img src="eureka-springs-coffee-house.jpg" alt="Eureka Coffee House" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Coffee · Pastries · Morning</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Eureka+Coffee+House+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Eureka Coffee House</a></h3>
+          <p class="card-meta">23 S Main St · Downtown · ~15 min from cabin</p>
+          <p class="card-body">Eureka Coffee House is a downtown institution — a warm, lived-in space on Main Street that has been anchoring slow mornings in Eureka Springs for years. The espresso is taken seriously, the pastry case rotates with the seasons, and the atmosphere is exactly what a honeymoon morning calls for: unhurried, cozy, and entirely unpretentious. Stone walls, comfortable seats, and the smell of coffee. It is the kind of place where an hour disappears and no one minds. Start here before Thorncrown, before the galleries, before any plan at all — and let whatever comes next arrive at its own pace.</p>
+          <p class="card-tip">✦ Ask what's local on the pastry shelf — they often source from nearby bakers whose names you won't find anywhere else.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEARBY EXTRAS -->
+    <div style="margin-top:3rem;">
+      <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:1.5rem; text-align:center;">Just Down the Road</p>
+      <div class="cards-grid" style="background:rgba(122,158,126,0.1);">
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/09-02-06-ThorncrownChapel1.jpg" alt="Thorncrown Chapel" onerror="this.style.display='none'"></span>
+          <p class="card-tag">5–10 Min · Unmissable</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Thorncrown+Chapel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Thorncrown Chapel</a></h3>
+          <p class="card-meta">12968 US-62 West · Heading away from town on your route</p>
+          <p class="card-body">From your cabin on CR-210, Thorncrown Chapel is one of the closest major landmarks — heading out on Hwy 62 West puts you there in minutes. One of the 20th century's most celebrated works of American architecture: 425 windows, 6,000 square feet of glass, a 48-foot timber frame nested into the Ozark forest so naturally it seems to have grown there. Visit at first light before tour buses arrive and the experience is transformative. It is the single most compelling reason to be in this part of Arkansas.</p>
+          <p class="card-tip">✦ Sunday morning services during the season are open to the public and are an extraordinary way to spend a honeymoon morning.</p>
+        </div>
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="https://www.turpentinecreek.org/wp-content/uploads/2024/02/Shakira-II-at-Turpentine-Creek-Wildlife-Refuge-white-tiger-scaled-e1708358334813.jpg" alt="Turpentine Creek Wildlife Refuge" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Unusual · Memorable</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Turpentine+Creek+Wildlife+Refuge+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Turpentine Creek Wildlife Refuge</a></h3>
+          <p class="card-meta">470 Turpentine Creek Ln · ~15 min from cabin</p>
+          <p class="card-body">A 500-acre refuge for rescued big cats — tigers, lions, ligers, leopards, cougars — set into the Ozark hillside outside Eureka Springs. It's a genuine rescue organization, not a zoo or roadside attraction, and the experience of walking among these animals in a naturalistic setting is genuinely moving. There's an on-site lodge if you ever want to stay closer, and the guided tours are educational and unhurried. An unusual choice for a honeymoon afternoon, but couples consistently describe it as one of the most memorable things they did on the trip.</p>
+          <p class="card-tip">✦ Book tickets in advance — the sunset feeding tour is the most atmospheric time to visit.</p>
+        </div>
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/09-02-06-EurekaSprings.jpg" alt="Inspiration Point scenic overlook" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Free · Scenic · 2 Min</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Inspiration+Point+overlook+Eureka+Springs+Arkansas+Hwy+62" target="_blank" rel="noopener">Inspiration Point Overlook</a></h3>
+          <p class="card-meta">Hwy 62 West · Roadside pulloff · Always open</p>
+          <p class="card-body">A roadside overlook on Hwy 62 West — just minutes from your cabin heading away from town — with panoramic views across the White River valley and the rolling Ozark hills. It costs nothing, takes two minutes to reach, and delivers the kind of view that makes you stop talking. Come at golden hour when the light is horizontal and the valleys are in shadow. In fall, the foliage turns the entire hillside in shades of amber, orange, and red. Keep it in your back pocket for any evening when you want a sunset without a plan.</p>
+          <p class="card-tip">✦ Pack two glasses and a bottle of wine from town. This overlook at dusk is one of the best free dates of the entire trip.</p>
+        </div>
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="OnyxCaveStalactites.jpg" alt="Onyx Cave stalactites" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Cave Tour · ~15 Min</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Onyx+Cave+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Onyx Cave Park</a></h3>
+          <p class="card-meta">338 Onyx Cave Ln · Hwy 62 East · ~15 min</p>
+          <p class="card-body">Onyx Cave is a small but genuinely striking natural cave just east of Eureka Springs along Hwy 62 — one of the only cave tours in this part of Arkansas accessible without a long drive. The guided tour moves through chambers filled with natural onyx, stalactites, and cave formations that have been developing for thousands of years. The cave stays a constant 58°F year-round, which makes it a perfect midday retreat on a warm afternoon. The tour is leisurely, narrated, and takes about 45 minutes — a quiet, atmospheric experience that's easy to pair with a morning at Thorncrown or an afternoon at Turpentine Creek.</p>
+          <p class="card-tip">✦ Bring a light layer — the cave is noticeably cool regardless of outdoor temperature. A nice break on a hot summer afternoon.</p>
+        </div>
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/War_Eagle_Mill_2021.jpg" alt="War Eagle Mill historic" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Historic Mill · Artisan Market</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=War+Eagle+Mill+Arkansas+historic+grist+mill" target="_blank" rel="noopener">War Eagle Mill</a></h3>
+          <p class="card-meta">11045 War Eagle Rd · Rogers, AR · ~35 min</p>
+          <p class="card-body">War Eagle Mill is a working 19th-century grist mill perched over the War Eagle River — still grinding corn and wheat using its original water-powered millstone. The setting is extraordinary: a covered bridge, a clear Ozark river, and the sound of rushing water as a constant backdrop. The mill's on-site restaurant serves fresh-ground cornbread, buckwheat pancakes, and mill-ground biscuits made from flour milled on the premises that morning. The War Eagle River valley itself is one of the most beautiful in northwest Arkansas. Visit on a weekday to have the place nearly to yourself.</p>
+          <p class="card-tip">✦ The Bean Palace restaurant serves breakfast and lunch — try the mill-ground cornbread and the river views from the dining room. The drive through the valley alone is worth the trip.</p>
+        </div>
+        <div class="card" style="background:var(--warm-white);">
+          <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/6/60/Va_Highlands_Horse_Trail_%2822349081423%29.jpg" alt="Frisco Trail rail trail" onerror="this.style.display='none'"></span>
+          <p class="card-tag">Rail Trail · Scenic · Free</p>
+          <h3 class="card-title"><a href="https://www.google.com/search?q=Frisco+Trail+Eureka+Springs+Arkansas+rail+trail" target="_blank" rel="noopener">Frisco Trail</a></h3>
+          <p class="card-meta">Trailhead off W Van Buren (Hwy 62) · ~8 min from cabin</p>
+          <p class="card-body">The Frisco Trail follows the old Frisco Railroad grade that once connected Eureka Springs to the outside world — it's a flat, shaded, mostly paved rail trail that cuts through wooded hollows and over small creek crossings, connecting the western edge of town to the downtown core. It's a quiet, contemplative walk with none of the elevation of downtown's historic loops, and its railroad history (you'll pass old stone bridges and retaining walls) gives it character beyond a typical greenway. Perfect for a morning walk that doesn't require a map. The trailhead is practically on your route into town.</p>
+          <p class="card-tip">✦ Walk it one-way into downtown, grab coffee at Mud Street Café, and catch the trolley back — a perfect low-effort morning.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div id="intro" style="background:var(--cream); padding: 5rem 2rem;">
+  <div class="pull-quote">
+    <p>"Your cabin sits on a hillside above it all — a private Ozark retreat five miles from everything worth doing and a world away from everything you left behind."</p>
+    <cite>Madeline & Clay · 486 CR-210</cite>
+  </div>
+  <div style="max-width:680px; margin:0 auto; text-align:center;">
+    <p style="font-size:1rem; line-height:1.9; color:var(--mid);">
+      Eureka Springs is a town unlike any other — its winding Victorian streets, hidden gardens, and deep Ozark quiet make it one of the most romantic destinations in the American South. And you're based in exactly the right place to experience it: a private cabin on CR-210 with a hot tub, a stone fireplace, and hilltop views that make driving home from town feel like arriving somewhere special. This is a guide built around where you're staying, what's close, and how to spend five days here the way it deserves to be spent.
+    </p>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- SIGHTS -->
+<section id="sights">
+  <div class="section-header">
+    <p class="section-eyebrow">Must-See</p>
+    <h2 class="section-title">Iconic <em>Sights</em></h2>
+    <div class="section-rule"></div>
+    <p class="section-intro">These are the places you'll talk about long after you've returned home.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/d/da/Downtown_Eureka_Springs%2C_Arkansas.jpg" alt="Historic Downtown Eureka Springs" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Historic District</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Historic+Downtown+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Historic Downtown</a></h3>
+      <p class="card-meta">Spring Street & surrounds · Always open</p>
+      <p class="card-body">Eureka Springs' downtown is a National Historic District — the entire town is on the National Register of Historic Places. The streets don't follow a grid because the terrain wouldn't allow it; instead they wind and switchback through the hillside, revealing Victorian storefronts, stone staircases, and tucked-away courtyards at every turn. Spend a morning browsing the galleries and boutiques on Spring Street, then ride the historic trolley to scout new corners to explore. The combination of eclectic shops, quality restaurants, and the sheer physical beauty of the architecture makes it endlessly rewarding.</p>
+      <p class="card-tip">✦ Note that many businesses close Tuesday and Wednesday — plan your downtown day accordingly. Park once and use the trolley.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://crescent-hotel.com/wp-content/uploads/2023/07/crescent-hotel-historical-mountaintop-spa-resort.jpg" alt="Crescent Hotel Eureka Springs" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Landmark Hotel</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Crescent+Hotel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">The Crescent Hotel</a></h3>
+      <p class="card-meta">75 Prospect Ave · Est. 1886</p>
+      <p class="card-body">Built in 1886 as a luxury resort atop a bluff overlooking the town, the Crescent Hotel is one of the most storied buildings in Arkansas. It's been a resort, a college, and infamously, a fraudulent cancer hospital in the 1930s — a dark chapter that left the building with a reputation as "America's Most Haunted Hotel." Whether or not you believe in ghosts, the architecture is magnificent, the views from the garden are sweeping, and the hotel's two offerings — the New Moon Spa and the popular ghost tours — are both highly rated. Even if you're not staying here, it's worth walking the grounds.</p>
+      <p class="card-tip">✦ Stop in for cocktails at the hotel bar in the evening. The Victorian interior at dusk is genuinely atmospheric.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="Basin-Spring-Park-Fountain.webp" alt="Basin Spring Park fountain" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Historic Park</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Basin+Spring+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Basin Spring Park</a></h3>
+      <p class="card-meta">4 Spring St · Open 24 hours · Free</p>
+      <p class="card-body">The original heart of Eureka Springs, Basin Spring Park sits at the center of downtown and marks the spot of the natural mineral spring that gave the town its reason for being. In the late 1800s, thousands of people came here seeking cures from the waters. Today the park is a beautiful, layered space of natural rock formations, sculpture, a gazebo, and often live music on the stage. It's the kind of place you pass through several times a day and notice something new each time. An ideal spot for a slow morning coffee break or an evening stroll.</p>
+      <p class="card-tip">✦ Follow the stairs up to the spring itself — most visitors miss it entirely.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/7/75/09-02-06--ChristofOzarks.jpg" alt="Christ of the Ozarks" onerror="this.style.display='none'" style="object-position: center 15%;"></span>
+      <p class="card-tag">Sacred Landmark</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Christ+of+the+Ozarks+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Christ of the Ozarks</a></h3>
+      <p class="card-meta">935 Passion Play Rd · Open daily · Free</p>
+      <p class="card-body">Standing seven stories tall on Magnetic Mountain northeast of downtown, the Christ of the Ozarks is one of the largest Christ statues in the United States. The statue and the surrounding grounds — which include outdoor Stations of the Cross carved from native Ozark stone — offer a quietly reflective outdoor walk with sweeping views of the surrounding forested hills. Whether or not it holds personal spiritual significance, the sheer scale of the sculpture and the serenity of the hilltop setting make it a memorable stop. Early morning visits, when the grounds are nearly empty and mist hangs in the valleys below, are particularly moving.</p>
+      <p class="card-tip">✦ Combine this with the nearby Passion Play amphitheater grounds for a longer, reflective morning walk.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="Carry%20Nation%20Cottage%20Hatchet%20Hall%20.jpg" alt="Hatchet Hall Victorian cottage" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Hidden Gem</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Carry+Nation+Cottage+Hatchet+Hall+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Hatchet Hall & the Carry Nation Cottage</a></h3>
+      <p class="card-meta">35 Steele St · Tours by appointment</p>
+      <p class="card-body">One of the more delightfully unexpected stops in Eureka Springs is the home of Carry Nation — the famous temperance activist who spent her final years here after a lifetime of notoriously smashing saloons with a hatchet. The Victorian cottage is preserved largely as it was during her residence, and the guided tour brings her story to life in a way that's genuinely fascinating, historically rich, and often surprisingly funny. It's one of those only-in-Eureka-Springs detours that you'll find yourself describing to people for years.</p>
+      <p class="card-tip">✦ Call ahead to confirm tour availability — this is a small operation and hours vary seasonally.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/St._Elizabeth%27s_Catholic_Church_-_panoramio_-_Photog_%281%29.jpg" alt="St Elizabeths Catholic Church" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Architectural Oddity · Free</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=St+Elizabeth%27s+Catholic+Church+Eureka+Springs+Arkansas" target="_blank" rel="noopener">St. Elizabeth's Catholic Church</a></h3>
+      <p class="card-meta">108 Crescent Dr · Open daily · Free to visit</p>
+      <p class="card-body">St. Elizabeth's is one of the most architecturally unusual churches in America — a Gothic Revival stone church built into the hillside in such a way that you enter it from the street through the bell tower, then descend a stone staircase to arrive in the nave. There's no other church in the country where the entrance is literally at the top of the steeple. Built in 1904 from locally quarried limestone, the interior is simple and beautiful, with stained glass and views down the hillside through arched windows. The building itself is a love letter to the strange topography of Eureka Springs — a place where ordinary rules of construction were simply set aside.</p>
+      <p class="card-tip">✦ Walk around the exterior of the building first to understand the geography before you enter — it makes the steeple-entrance moment far more surprising.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- SPA -->
+<div id="spa" class="dark-section">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow" style="color:var(--gold-light);">Rest & Restore</p>
+      <h2 class="section-title">Spa & <em style="color:var(--sage-light)">Wellness</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Eureka Springs has a long tradition of healing — the mineral springs drew visitors seeking restoration for over a century. That spirit lives on in its spas.</p>
+    </div>
+
+    <div class="cards-grid" style="background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.07);">
+      <div class="card dark">
+        <span class="card-icon"><img src="Spa%20couples%20massage.jpg" alt="Spa couples massage" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Couples Massage</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Spa1905+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Spa1905</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">12 Spring St, Second Floor · Downtown</p>
+        <p class="card-body">Named for the year the building was constructed, Spa1905 occupies a lovely spot above the downtown bustle with gorgeous historic bones. It's particularly popular with newlyweds — reviewers who mention honeymoons and anniversaries consistently rave about the couples massage experience, which begins with a relaxing salt lamp foot soak before the massage itself. The therapists use organic products and the vibe is warm and personal rather than clinical. Services include massages, facials, and body treatments. The central downtown location makes it easy to pair with lunch before or a cocktail after.</p>
+        <p class="card-tip">✦ Book the couples massage package well in advance — weekends fill up fast, especially in the warmer months.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="NewMoonSpa%26Salon.jpg" alt="New Moon Spa luxury" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Full-Service Day Spa</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=New+Moon+Spa+Salon+Crescent+Hotel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">New Moon Spa & Salon</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">75 Prospect Ave · At the Crescent Hotel</p>
+        <p class="card-body">Attached to the historic Crescent Hotel, New Moon is the most full-featured spa in Eureka Springs. Beyond couples massages and facials, guests have access to the hotel's hot tub, sauna, and swimming pool as part of their visit — a genuine perk that elevates the experience considerably. The views from the building are beautiful in any season. Couples who stay at the Crescent have the added luxury of walking straight from their treatment back to their room. The therapists are described as intuitive and calming, and the overall atmosphere strikes a balance between indulgence and genuine relaxation.</p>
+        <p class="card-tip">✦ Request the garden-view treatment room if available. The hot tub and sauna access alone make this worth booking.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="Eureka%20Massage%20wellness.jpg" alt="Eureka Massage wellness" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Boutique Wellness</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Eureka+Massage+Wellness+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Eureka!! Massage & Wellness</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">147 W Van Buren · Open Tue–Sat</p>
+        <p class="card-body">A smaller, more intimate operation than the larger spas in town, Eureka!! Massage and Wellness offers a serene and tranquil environment that feels tucked away from the world. Lead therapist Alexa is frequently praised for her exceptional skill — reviewers specifically call out her ability to identify and address long-held muscle tension. If one of you is a first-time massage recipient, the staff here are known for being patient and thorough in explaining every step of the process. The studio is meticulously clean and the energy is genuinely calming.</p>
+        <p class="card-tip">✦ Book a 90-minute session rather than 60 — nearly everyone who does a 60-minute says they wished they'd gone longer.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="Palace%20Hotel%20bathhouse.webp" alt="Palace Hotel bathhouse" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Mineral Soak · Hydrotherapy</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Palace+Hotel+Bath+House+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Palace Hotel Bath House</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">135 Spring St · Downtown · Walk-ins welcome</p>
+        <p class="card-body">A nod to Eureka Springs' original identity as a healing spa town, the Palace Hotel Bath House offers old-world hydrotherapy experiences including mineral soaks, steam cabinets, and traditional scrubs — treatments almost unchanged from what Victorian-era visitors came here seeking. The bath house rooms are private and intimate, with clawfoot tubs and an unhurried pace. For couples looking for something genuinely different from a standard massage, this is a memorable, historically resonant alternative. The combination of a mineral soak followed by a steam treatment is deeply restorative.</p>
+        <p class="card-tip">✦ Book the "His &amp; Hers" dual soak room for a shared experience — it's one of the most romantically unique things you can do in Eureka Springs.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="cozy%20cabin%20fireplace%20in-cabin%20massage.jpg" alt="cozy cabin fireplace in-cabin massage" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Private · In-Cabin · Mobile</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=mobile+massage+therapist+in-cabin+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Private In-Cabin Massage</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">Therapist comes to 486 CR-210 · Book in advance</p>
+        <p class="card-body">Several licensed massage therapists in the Eureka Springs area offer mobile sessions — they bring a table, linens, and oils and set up directly in your cabin. Given that your place has a fireplace, hilltop views, and a private deck, having a therapist come to you transforms the entire experience. No driving, no check-in desk, no waiting room — just your own space, a fire going, and a professional session followed by an evening on the deck with a glass of wine and the Ozark hills in the distance. This is the definition of honeymooning well. Ask any of the downtown spas if they or a colleague offer mobile services.</p>
+        <p class="card-tip">✦ Book a back-to-back session — one of you goes first while the other pours drinks and tends the fire. Switch and let the evening unfold.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="private%20hilltop%20hot%20tub.jpg" alt="private hilltop hot tub" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Your Cabin · Hot Tub · Free</p>
+        <h3 class="card-title">Your Private Hilltop Hot Tub</h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">486 CR-210 · No reservation required · Always open</p>
+        <p class="card-body">You have a hot tub on your deck overlooking the Ozark hills — use it as your private spa. This is the easiest and most romantic wellness option on the entire list. The routine is simple: pick up a bottle of wine from Keels Creek on the way back from wherever you've been, light a fire in the fireplace, slip into the hot tub as the sky shifts through sunset into dark, and stay as long as you like with no one around for miles. There's something deeply restorative about soaking in hot water with a view of forested hills going quiet around you. No schedule, no checkout time, no strangers. Just the two of you and the Ozarks.</p>
+        <p class="card-tip">✦ The best version of this: come home after a day of hiking and fishing, shower, open wine, and get in the tub before dinner. Plan nothing for the rest of the evening.</p>
+      </div>
+
+      <div class="card dark">
+        <span class="card-icon"><img src="morning%20yoga%20Eureka%20Springs.jpg" alt="morning yoga Eureka Springs" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Yoga · Morning Practice</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=yoga+studio+class+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Morning Yoga in Eureka Springs</a></h3>
+        <p class="card-meta" style="color:rgba(245,240,232,0.4);">Various studios · Downtown · ~15 min from cabin</p>
+        <p class="card-body">Several yoga studios and wellness instructors in Eureka Springs offer morning classes — from gentle flow sessions suitable for all levels to more structured hatha and vinyasa practices. Starting a honeymoon morning with an hour of shared movement, followed by coffee at Mud Street Café and a slow walk through the historic district, sets a tone for the day that's hard to beat. Some instructors also offer private sessions for couples at your location. Check local boards and the Eureka Springs visitor center for current class schedules, as studio offerings change seasonally.</p>
+        <p class="card-tip">✦ A couples yoga session — even for beginners — is a surprisingly intimate and fun experience. Ask the instructor to tailor it for two and no prior experience.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DINING -->
+<section id="dining">
+  <div class="section-header">
+    <p class="section-eyebrow">Table for Two</p>
+    <h2 class="section-title">Romantic <em>Dining</em></h2>
+    <div class="section-rule"></div>
+    <p class="section-intro">From an intimate six-course tasting menu to a cave-set wood-fired grill, Eureka Springs punches well above its size when it comes to dinner.</p>
+  </div>
+
+  <!-- Featured restaurant -->
+  <div class="feature-card" style="margin-bottom:2px;">
+    <div class="feature-visual" style="background:linear-gradient(135deg, var(--forest) 0%, #1a2b1b 100%);">
+      <div class="feature-visual-bg"></div>
+      <img src="le-stick-nouveau.jpg" alt="Le Stick Nouveau fine dining" onerror="this.style.display='none'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+    </div>
+    <div class="feature-content">
+      <p class="card-tag" style="color:var(--gold-light);">Editor's Top Pick</p>
+      <h3 style="font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--cream); margin-bottom:0.4rem;">
+        <a href="https://www.google.com/search?q=Le+Stick+Nouveau+Eureka+Springs+Arkansas" target="_blank" rel="noopener" class="feature-title-link">Le Stick Nouveau</a>
+      </h3>
+      <p style="font-size:0.7rem; color:rgba(245,240,232,0.4); letter-spacing:0.1em; margin-bottom:1.2rem;">580 W Van Buren · Fri–Sun only, 7–9 PM · Reservations essential</p>
+      <p style="font-size:0.9rem; line-height:1.8; color:rgba(245,240,232,0.7);">Eureka Springs' most special dinner experience, and genuinely one of the most memorable meals you can have in Arkansas. Chef-owner Donna runs an intimate, prix fixe tasting menu — six beautifully composed courses, each presented tableside with a description of the ingredients and preparation. Wine pairings are offered course by course. The restaurant seats just a handful of tables, and everyone dines at the same pace, creating a rare shared atmosphere. Staff go out of their way to celebrate honeymoons and anniversaries. If you only splurge on one dinner, make it this one.</p>
+      <p style="margin-top:1.2rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.9rem; color:var(--gold-light);">✦ Call ahead and mention your honeymoon — they'll make the night unforgettable.</p>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon"><img src="Grotto%20Wine%20Cave%20wood-fired.jpg" alt="Grotto Wine Cave wood-fired" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Wood-Fired · Wine Cave</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Grotto+Wood+Fired+Grill+Wine+Cave+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Grotto Wood-Fired Grill & Wine Cave</a></h3>
+      <p class="card-meta">10 Center St · Mon, Wed–Sun from 5 PM</p>
+      <p class="card-body">The Grotto is the kind of restaurant a town this size rarely has — genuinely excellent, with a wine list and an atmosphere that belong in a major city. The setting itself is the talking point: a wine cave carved into the Ozark hillside, candlelit and intimate. The menu leans toward wood-fired steaks, duck, and handcrafted apps. The smoked short rib is consistently celebrated, as are the quail poppers. Service is knowledgeable and warm without being fussy. A great option any night when Le Stick isn't open.</p>
+      <p class="card-tip">✦ Ask for a table in the cave section rather than the main room. The atmosphere there is on another level.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Crescent_Hotel.jpg" alt="Rogues Manor fine dining Victorian" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Fine Dining · Cocktails</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Rogues+Manor+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Rogue's Manor</a></h3>
+      <p class="card-meta">124 Spring St · Wed–Sun from 4 PM</p>
+      <p class="card-body">A beloved fixture of downtown Eureka Springs, Rogue's Manor occupies a gorgeous Victorian building on Spring Street. The interior is layered with character — exposed stone, moody lighting, a lively bar scene that doesn't overwhelm the dining room. The menu rotates seasonally and leans upscale American with creative applications: oysters Rogue-a-feller, dry-aged steaks, beautifully plated salmon. The glassed-in dining room is a favorite spot for couples. The cocktails are genuinely creative and bartender Jessica, mentioned in multiple reviews, is a standout.</p>
+      <p class="card-tip">✦ The lounge area has a slightly more relaxed energy — great if you want drinks and apps before or after dinner elsewhere.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://img1.wsimg.com/isteam/ip/6b7b82df-1085-4b05-8ef8-5b22900736c3/fb_2761735343842051_2048x1133.jpg" alt="Railway Winery private dinner" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Winery Dinner · Private</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Railway+Winery+private+dinner+event+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Private Winery Dinner at Railway Winery</a></h3>
+      <p class="card-meta">4937 State Hwy 187 · Book directly with the winery</p>
+      <p class="card-body">Railway Winery's hilltop setting — with sweeping views across the Ozark hills and a patio that catches the last light of the evening — is one of the most naturally romantic spots in the area. On select evenings they host private dinners and wine pairing experiences for small groups and couples, pairing multiple courses with estate-grown wines and a conversation through the vintage and the vineyard's story. Even if a formal dinner event isn't on the calendar during your stay, arriving for a late-afternoon tasting and staying through sunset on the patio with a bottle of their Vignoles is as good a romantic evening as anything else on this list. Call ahead and ask what's happening during your visit.</p>
+      <p class="card-tip">✦ Mention your honeymoon when you call — the owners take genuine pleasure in making the occasion feel special, and they'll often set you apart from the regular tasting flow.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- WINE -->
+<div id="wine" style="background:var(--cream); padding:6rem 2rem;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">Sip & Linger</p>
+      <h2 class="section-title">Wine & <em>Vineyards</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Northwest Arkansas has a quietly growing wine culture. Both vineyards near Eureka Springs use locally grown grapes and offer a genuine sense of place.</p>
+    </div>
+
+    <div class="cards-grid" style="background:rgba(122,158,126,0.1);">
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="railway-winery.jpg" alt="Railway Winery vineyard rows" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Vineyard · Scenic Views</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Railway+Winery+Vineyards+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Railway Winery & Vineyards</a></h3>
+        <p class="card-meta">4937 State Hwy 187 · Fri–Sun, 12–5 PM</p>
+        <p class="card-body">A true vineyard experience — not just a tasting room, but a working property where you can walk through the vines and take in sweeping views of the surrounding hills. Owner-operators Greg and Vicki have poured genuine passion into the project, and their guide Gretchen is described by visitors as a treasure trove of local knowledge. The wine list includes some distinctive regional varietals, and the slushee mimosa is reportedly a crowd-pleaser. The patio is especially lovely on an October evening, though the drive out is beautiful in any season.</p>
+        <p class="card-tip">✦ Check their website before visiting — hours can vary and seasonal events sometimes close the tasting room early.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="Keels%20Creek%20Winery.jpg" alt="Keels Creek winery tasting" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Winery · Pet Friendly</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Keels+Creek+Winery+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Keels Creek Winery</a></h3>
+        <p class="card-meta">3183 E Van Buren · Fri–Sat 1–7 PM, Sun 1–5 PM</p>
+        <p class="card-body">Closer to town than Railway, Keels Creek is a charming winery with a knowledgeable, personable staff and an emphasis on estate-grown grapes — nothing is bought in from other regions. The pet-friendly patio is a delight if you've brought a dog along for the trip. The sommelier's approach is genuinely educational — she walks you through the grape origins and flavor profiles in a way that makes the tasting feel like a conversation rather than a sales pitch. The Vignoles white and the Embarrassed red are frequently mentioned as standouts. Flight of five for $15 makes this an easy, affordable afternoon.</p>
+        <p class="card-tip">✦ Stop here after hiking at Hobbs State Park — the two make a perfect afternoon pairing.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="Ozarks%20craft%20brewery.webp" alt="Ozarks craft brewery" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Craft Beer · Local</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=craft+breweries+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Brews of the Ozarks</a></h3>
+        <p class="card-meta">Various tasting rooms · Downtown & surrounds</p>
+        <p class="card-body">The craft beer scene in northwest Arkansas has grown considerably in recent years, and Eureka Springs sits at the center of it. Several small-batch breweries operate within a short drive, producing everything from crisp Ozark lagers to bold barrel-aged stouts. The taprooms are relaxed and unpretentious — more communal tables and conversation than cocktail menus and reservations. For an afternoon alternative to wine tasting, a self-guided brewery crawl through the area makes for a wonderfully low-key, exploratory afternoon that reveals a different side of the local culture.</p>
+        <p class="card-tip">✦ Ask locals at any restaurant for their current favorite — the scene evolves quickly and word-of-mouth points to the best current spots.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- OUTDOORS -->
+<section id="outdoors">
+  <div class="section-header">
+    <p class="section-eyebrow">Into the Ozarks</p>
+    <h2 class="section-title">Outdoor <em>Escapes</em></h2>
+    <div class="section-rule"></div>
+    <p class="section-intro">The landscape around Eureka Springs is the backdrop for some genuinely beautiful shared moments — from easy lakeside strolls to proper trail adventures.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Lake_Leatherwood_near_Eureka_Springs%2C_Arkansas_%2880862%29.jpg" alt="Lake Leatherwood mountain biking" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Mountain Biking</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Lake+Leatherwood+Gravity+Project+mountain+biking+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Lake Leatherwood Gravity Project</a></h3>
+      <p class="card-meta">Co Rd 204 · Shuttle service available · $30/day</p>
+      <p class="card-body">If you and your partner are cyclists, this is a legitimately world-class stop. The downhill trail system — ranging from green (beginner) to double black (expert) — has been recognized nationally and draws riders from across the region. The shuttle service means you don't have to grind uphill; park your car, pay the shuttle, and spend the day running laps on whichever trails match your ability. Even the green trail has enough speed and flow to be a thrill. Bike rentals are available nearby through Adventure Mountain Outfitters. A perfect active day if hiking isn't your preferred pace.</p>
+      <p class="card-tip">✦ Watch a few YouTube videos of the trails before you go — it helps you choose the right difficulty level.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="horseback%20trail%20ride.webp" alt="Ozark horseback trail ride" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Horseback · Ozark Trail Ride</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=horseback+trail+ride+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Ozark Horseback Trail Ride</a></h3>
+      <p class="card-meta">Various outfitters · ~15–20 min from cabin · Guided</p>
+      <p class="card-body">Several outfitters in the Carroll County area offer guided horseback trail rides through the Ozark forest — winding single-track paths through hardwood forest, up limestone ridgelines, and out to bluff-edge views over valleys that feel genuinely remote. No riding experience is necessary; horses are matched to ability and the guides lead at a relaxed, conversational pace. A two-hour sunset ride through the hills is one of the most quietly romantic things you can do in this part of the country — the kind of experience that has no cell service, no agenda, and no sounds other than hooves on soft earth. Look for guided rides near the Beaver Dam area or ask at the Eureka Springs visitor center for the current outfitter they recommend.</p>
+      <p class="card-tip">✦ Opt for a late-afternoon ride timed to finish near golden hour — the light through the forest canopy on horseback is something you won't forget.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="OzarkHighlandsScenicDrive.jpg" alt="Ozark highlands scenic drive" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Scenic Drive</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Ozark+Highlands+scenic+drive+Arkansas" target="_blank" rel="noopener">Ozark Highlands Scenic Drive</a></h3>
+      <p class="card-meta">Self-guided · 2–3 hours · Free</p>
+      <p class="card-body">One of the great pleasures of being in northwest Arkansas is simply driving the back roads. The hills fold and rise in ways that reward slow, unplanned exploration — pulling off at a hilltop overlook, discovering a small waterfall down a gravel track, finding a forgotten church with a view that stops you cold. Pick up a map at the Eureka Springs visitor center and follow their suggested scenic loop south toward the Buffalo River country, or simply point yourself toward Carroll County's back roads and see what you find. In fall, the color is extraordinary; in spring, the dogwoods and redbuds turn the hillsides pink and white.</p>
+      <p class="card-tip">✦ Pack a blanket and a bottle of wine — the pull-off overlooks on AR-21 south of town are made for golden-hour picnics.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- ENTERTAINMENT -->
+<div id="entertainment" style="background:var(--cream); padding:6rem 2rem;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">After Dark</p>
+      <h2 class="section-title">Live Music & <em>Entertainment</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Eureka Springs has a performing arts culture that far outstrips its size. Any evening, there's likely something worth staying out for.</p>
+    </div>
+
+    <div class="cards-grid" style="background:rgba(122,158,126,0.1);">
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="https://intriguetheater.com/wp-content/uploads/2025/01/DSC01485-edit-1024x686.jpg" alt="Intrigue Theater Eureka Springs" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Theater · Magic · Comedy</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Intrigue+Theater+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Intrigue Theater</a></h3>
+        <p class="card-meta">37 Kingshighway · Seasonal shows · intriguetheater.com</p>
+        <p class="card-body">Intrigue Theater is one of the most talked-about evening experiences in Eureka Springs — a professional-grade variety theater staging original comedy, magic, and mystery productions in an intimate Victorian setting. The rotating lineup changes throughout the season and typically includes comedy showcases, mentalism and illusion acts, and fully staged immersive mystery experiences. The shows are clever and well-produced, leaning into Eureka Springs' reputation as an eccentric, creatively alive town. An evening here followed by a late glass of wine next door makes for one of the more memorable nights on the trip.</p>
+        <p class="card-tip">✦ Check the current show calendar at intriguetheater.com before your trip — productions rotate regularly and popular shows sell out weeks in advance.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="BasinSpringParkBandstandLiveMusic.jpg" alt="Basin Spring Park bandstand live music" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Live Music · Outdoor</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Basin+Spring+Park+bandstand+live+music+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Basin Spring Park Bandstand</a></h3>
+        <p class="card-meta">4 Spring St · Free · Seasonal weekends</p>
+        <p class="card-body">Throughout the spring, summer, and fall, the bandstand in Basin Spring Park hosts free live performances on weekend evenings — folk, blues, bluegrass, acoustic singer-songwriters, and occasional jazz. The setting is genuinely magical: Victorian storefronts surrounding a park lit by string lights, the sound of music drifting through the old stone and brick of downtown. Bring a bottle of wine from a nearby shop, find a bench or a spot on the grass, and let the evening unspool around you. It's one of those spontaneous-feeling experiences that you can't manufacture — and one you'll remember long after the bigger-budget evenings have blurred together.</p>
+        <p class="card-tip">✦ Check the Eureka Springs Parks & Recreation calendar before your trip — weekend concerts are a summer staple but schedules shift.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="Eureka%20Springs%20Opera%20House.jpg" alt="Eureka Springs Opera House" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Variety · Historic Venue</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Eureka+Springs+Opera+House+Arkansas" target="_blank" rel="noopener">The Opera House</a></h3>
+        <p class="card-meta">36 S Main St · Seasonal programming</p>
+        <p class="card-body">The Eureka Springs Opera House is one of the oldest performing arts venues in Arkansas — a beautifully preserved space that hosts a rotating calendar of concerts, dance performances, comedy shows, and special events throughout the year. The acoustics are remarkable, as one would expect from a purpose-built 19th-century hall, and the programming tends toward the eclectic and high-quality. Upcoming performances are listed on the city's event calendar; if anything lines up with your stay, it's almost always worth attending. An evening in this space, whatever is playing, connects you to the long cultural life of the town.</p>
+        <p class="card-tip">✦ The venue hosts special New Year's Eve and Valentine's Day events that book up months in advance — plan ahead if your visit coincides.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="Chelseas%20Corner%20live%20music%20bar.jpg" alt="Chelseas Corner live music bar" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Bar · Live Sets</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Chelsea%27s+Corner+Cafe+Bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Chelsea's Corner Café & Bar</a></h3>
+        <p class="card-meta">10 Mountain St · Wed–Sun from 5 PM</p>
+        <p class="card-body">The most consistently lively music bar in downtown Eureka Springs, Chelsea's hosts live sets most evenings — folk, roots rock, acoustic covers, and occasional touring acts who make Eureka Springs a regular stop on the Ozark circuit. The bar itself is an institution: a casual, unpretentious space with strong drinks, a friendly staff, and a clientele that ranges from college kids to grandparents. It's the kind of place where you end up staying far later than intended because the music is good and the conversation flows. A perfect cap to a dinner-and-exploring evening.</p>
+        <p class="card-tip">✦ Thursday nights tend to have the best original-artist sets. Weekend covers are fun but the Thursday crowd is often more interesting.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Aerial_shot_of_downtown_Eureka_Springs%2C_Arkansas.jpg" alt="1905 Basin Park Hotel rooftop bar" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Rooftop Bar · Historic Hotel</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=1905+Basin+Park+Hotel+rooftop+bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">1905 Basin Park Hotel Rooftop</a></h3>
+        <p class="card-meta">98 Spring St · Downtown · Open seasonally</p>
+        <p class="card-body">The rooftop bar at the 1905 Basin Park Hotel is one of the best elevated vantage points in downtown Eureka Springs — a casual outdoor space set atop a seven-story historic hotel, with panoramic views over the Victorian rooftops, the surrounding forested hills, and the town's distinctive steeples and towers. On weekend evenings, live acoustic music drifts up from the bar below or plays directly on the roof, and the combination of good cocktails, warm Ozark air, and that particular view of a small town going quiet for the night is deeply satisfying. It's the kind of evening that caps a long exploration day perfectly — no reservations, no pretense, just a good perch and a drink you didn't have to plan.</p>
+        <p class="card-tip">✦ Come at dusk — the light on the Victorian storefronts below from this height is one of the more beautiful things in town.</p>
+      </div>
+
+      <div class="card" style="background:var(--cream);">
+        <span class="card-icon"><img src="Ozark%20roots%20music%20acoustic.jpg" alt="Ozark roots music acoustic" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Roots Music · Local Talent</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=live+music+venues+Eureka+Springs+Arkansas+blues+roots" target="_blank" rel="noopener">Ozark Roots Music Scene</a></h3>
+        <p class="card-meta">Various venues downtown · Thu–Sat evenings</p>
+        <p class="card-body">Eureka Springs has always been a refuge for musicians — the combination of affordability, community, and an appreciative audience has drawn serious players to this small town for decades. Beyond the major venues, the informal live music scene plays out in unexpected corners: a bluegrass picker at a wine bar, a blues guitarist on the back porch of a restaurant, a traveling songwriter at a coffeehouse on a Tuesday. The best way to find it is to walk downtown on any Thursday, Friday, or Saturday evening and follow the sound. The Eureka Springs music community is genuinely talented, deeply rooted in Ozark folk and blues traditions, and remarkably accessible — shows are often free or a small cover charge.</p>
+        <p class="card-tip">✦ Ask at any restaurant or shop who's playing that night. Locals will steer you toward the best music in town and usually know of something special happening that isn't on any calendar.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIQUE EXPERIENCES -->
+<div id="unique" style="background:var(--blush-light); padding:6rem 2rem;">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow">Only in Eureka</p>
+      <h2 class="section-title">Uniquely <em>Unforgettable</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">A few experiences that you simply can't replicate anywhere else.</p>
+    </div>
+
+    <div class="cards-grid" style="background:rgba(201,144,122,0.1); border-color:rgba(201,144,122,0.2);">
+      <div class="card" style="background:white;">
+        <span class="card-icon"><img src="https://www.greatpassionplay.org/uploads/1/5/6/5/15651412/background-images/962817146.jpeg" alt="Great Passion Play outdoor amphitheater" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Outdoor Theater · Only Here</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Great+Passion+Play+Eureka+Springs+Arkansas" target="_blank" rel="noopener">The Great Passion Play</a></h3>
+        <p class="card-meta">935 Passion Play Rd · Seasonal · May–Oct</p>
+        <p class="card-body">One of the most extraordinary theatrical experiences in the American South: a massive outdoor amphitheater carved into the side of Magnetic Mountain, seating 4,000 people, staging one of the longest-running outdoor dramas in US history. The production involves hundreds of actors, live animals, elaborate period sets, and special effects across the full mountainside stage — it's genuinely spectacular in scale, and utterly unlike anything you've seen before. Even for couples who aren't religiously inclined, the production values and the sheer ambition of the enterprise are worth an evening. No other town in Arkansas does anything remotely like it. Book tickets in advance and dress in layers — evenings on the mountain can be cool.</p>
+        <p class="card-tip">✦ Arrive 30 minutes early to walk the outdoor Biblical Arts Center and Stations of the Cross before the show. The hilltop setting at dusk is beautiful.</p>
+      </div>
+
+      <div class="card" style="background:white;">
+        <span class="card-icon"><img src="https://images.squarespace-cdn.com/content/v1/59c40fae64b05fa11d93f693/1768250761820-T6ECT9VTB2LI67LS9FT4/1904.jpeg" alt="Underground Eureka Tour historic walking" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Walking Tour · History</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=Underground+Eureka+Tour+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Underground Eureka Tour</a></h3>
+        <p class="card-meta">Spring St · Daily from 4 PM · ~75 minutes</p>
+        <p class="card-body">This walking tour of historic downtown Eureka Springs covers the fascinating story of how the town came to be — including the original storefronts that were literally buried when the streets were raised following mudslides in the city's early years. Guide Hayden is frequently praised for being genuinely funny and deeply knowledgeable, making the history feel alive rather than like a lecture. Despite the name, it's primarily an above-ground walking tour that includes a brief underground portion; the payoff is understanding the layers of history underneath your feet as you explore town the rest of your trip.</p>
+        <p class="card-tip">✦ Do this tour early in your stay so that the history enriches the rest of your wandering around downtown.</p>
+      </div>
+
+      <div class="card" style="background:white;">
+        <span class="card-icon"><img src="ArtGalleriesSpringStreet.jpg" alt="Gallery Hopping Spring Street art" onerror="this.style.display='none'"></span>
+        <p class="card-tag">Arts & Culture</p>
+        <h3 class="card-title"><a href="https://www.google.com/search?q=art+galleries+Spring+Street+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Gallery Hopping on Spring Street</a></h3>
+        <p class="card-meta">Historic Downtown · Most open Thu–Mon</p>
+        <p class="card-body">Eureka Springs has a disproportionately large and serious arts community for a town its size. The galleries along Spring Street and the surrounding blocks represent working artists — painters, jewelers, sculptors, ceramicists — not tourist trinket shops. Many of the artists are local and in-residence, meaning you may actually meet the person who made the piece you're admiring. If you're looking for a meaningful honeymoon keepsake, this is far better than a souvenir shop: a piece of original art from a gallery in Eureka Springs, purchased on your trip, is something you'll look at for the rest of your life together.</p>
+        <p class="card-tip">✦ Ask gallery staff which artists are local and working. Many will tell you stories that make the work even more meaningful.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- DAY TRIPS -->
+<section id="daytrips">
+  <div class="section-header">
+    <p class="section-eyebrow">Beyond the Town</p>
+    <h2 class="section-title">Day <em>Trips</em></h2>
+    <div class="section-rule"></div>
+    <p class="section-intro">Eureka Springs is surrounded by some of the most beautiful country in the mid-South. These excursions reward the couples willing to venture a little further.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon"><img src="https://www.nps.gov/common/uploads/grid_builder/buff/crop16_9/B9B903E4-C2DE-1A47-B1261A809FB7FAF8.jpg" alt="Buffalo National River canyon" onerror="this.style.display='none'"></span>
+      <p class="card-tag">National Park · Iconic</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Buffalo+National+River+Arkansas" target="_blank" rel="noopener">Buffalo National River</a></h3>
+      <p class="card-meta">~1 hour south · Free admission · NPS-managed</p>
+      <p class="card-body">The Buffalo River was the first federally designated National River in the United States — a testament to the extraordinary beauty of its clear water, soaring limestone bluffs, and undeveloped corridor through the Ozark highlands. A day trip south to the Buffalo offers swimming in crystalline water, floating through canyon-like passages, and hiking trails that lead to views you'll struggle to describe to people who haven't seen them. The stretch near Ponca, including the iconic Lost Valley trail and the views from Steel Creek campground, is among the most beautiful places in the American South. Pair with a stop in the small town of Jasper for lunch at Cliff House Inn.</p>
+      <p class="card-tip">✦ The Lost Valley trail (easy, 2 miles) ends at a waterfall inside a cave — don't miss it. Bring a headlamp.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="Crystal%20Bridges%20Museum%20American%20Art.webp" alt="Crystal Bridges Bentonville museum" onerror="this.style.display='none'"></span>
+      <p class="card-tag">City · Museums · Food</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Crystal+Bridges+Museum+American+Art+Bentonville+Arkansas" target="_blank" rel="noopener">Bentonville & Crystal Bridges</a></h3>
+      <p class="card-meta">~1 hour east · Free museum admission</p>
+      <p class="card-body">Crystal Bridges Museum of American Art in Bentonville is one of the finest art museums in the country — a Frank Gehry-designed building set into a forested ravine, housing a world-class permanent collection spanning five centuries of American art. The museum is free, the grounds are stunning, and the surrounding Bentonville food and hotel scene (driven by Walmart HQ money and a surprising influx of culinary talent) punches far above its weight. A full-day trip: morning at Crystal Bridges, lunch at The Pressroom or Pedaler's Pub, afternoon at the Momentary contemporary art space next door.</p>
+      <p class="card-tip">✦ Download the Crystal Bridges app before your visit — the audio commentary on key works significantly deepens the experience.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="Crater-of-Diamonds%20state%20park.jpg" alt="Crater of Diamonds State Park" onerror="this.style.display='none'"></span>
+      <p class="card-tag">State Park · Only in Arkansas</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Crater+of+Diamonds+State+Park+Arkansas" target="_blank" rel="noopener">Crater of Diamonds State Park</a></h3>
+      <p class="card-meta">~2.5 hours south · Small admission fee</p>
+      <p class="card-body">One of the most genuinely unusual experiences in America: an Arkansas state park built around the only diamond-producing site in the world open to the public. Visitors pay a small fee to dig in a plowed 37-acre field — the eroded surface of an ancient volcanic pipe — and keep any diamonds they find. Real diamonds are found here regularly; the park averages two or three finds per day. The romance of coming home from your honeymoon with a diamond you dug out of Arkansas earth yourself is the kind of story that never gets old. It's a longer drive, but for adventurous couples, it's unforgettable.</p>
+      <p class="card-tip">✦ After a rain is the best time to go — diamonds wash to the surface and the field is easier to search. Bring old clothes and flat-bottom shoes.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="Beaver%20Lake%20fishing%20Dam%20Site%20Park%20Eureka%20Springs%20Arkansas.webp" alt="Beaver Lake recreation area" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Lake · Water Sports</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Beaver+Lake+Recreation+Area+Arkansas" target="_blank" rel="noopener">Beaver Lake Recreation Area</a></h3>
+      <p class="card-meta">~20 min east · Army Corps of Engineers</p>
+      <p class="card-body">Beaver Lake is a 28,000-acre reservoir created by damming the White River in the 1960s, now surrounded by the Ozark National Forest and offering a staggering variety of outdoor activity. Beyond the hiking in Hobbs State Park, the lake itself supports sailing, powerboat rentals, fishing, and swimming at several beautiful sandy shorelines. Rocky Branch Park and Prairie Creek Marina are the best access points for couples who want to rent a pontoon boat and spend a lazy afternoon on the water — few things compare to anchoring in a cove, swimming off the back, and watching the sun set over the forested hills.</p>
+      <p class="card-tip">✦ Rocky Branch Marina rents pontoons by the half-day. Pack a cooler and treat yourself to a private afternoon on the lake.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://hfe.widen.net/content/5vvxmazxuh/jpeg/SDC26_Portal_sdc1.jpg" alt="Branson Missouri Table Rock Lake" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Branson · ~45 Min North</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Branson+Missouri+Silver+Dollar+City+Table+Rock+Lake" target="_blank" rel="noopener">Branson, Missouri & Table Rock Lake</a></h3>
+      <p class="card-meta">~45 min north on Hwy 62/86 · Over the Missouri border</p>
+      <p class="card-body">Branson sits just across the Missouri state line — an easy 45-minute drive from your cabin — and offers a completely different energy from Eureka Springs. Silver Dollar City is a genuinely world-class theme park built around Ozark heritage and craft: live music stages, award-winning roller coasters, and artisans demonstrating traditional Ozark crafts in a Victorian-era village setting. For couples who want a lighter day, Table Rock Lake has beautiful beaches, boat rentals, and waterfront restaurants. The Branson Landing boardwalk offers shopping, dining, and a famous hourly water-and-fire fountain show. Best as a full day out — go in the morning, stay for the evening show.</p>
+      <p class="card-tip">✦ Silver Dollar City books up on weekends in peak season — buy tickets online in advance. Table Rock Lake is beautiful any day without a reservation.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-icon"><img src="https://www.uark.edu/_resources/images/VhVrJFjzcSc-HD.jpg" alt="Fayetteville Arkansas arts scene" onerror="this.style.display='none'"></span>
+      <p class="card-tag">Fayetteville · ~1 Hour East</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Fayetteville+Arkansas+Dickson+Street+food+arts+scene" target="_blank" rel="noopener">Fayetteville & the NWA Arts Scene</a></h3>
+      <p class="card-meta">~1 hour east on Hwy 62 · University of Arkansas town</p>
+      <p class="card-body">Fayetteville is the cultural engine of northwest Arkansas — a lively university town with a walkable downtown, a nationally recognized food scene along Dickson Street, and an arts culture anchored by the University of Arkansas. The Fayetteville Farmers Market (spring–fall, Saturday mornings on the square) is one of the best in the South. Kessler Mountain Regional Park has excellent trails and hilltop views over the city. For couples who want a change of pace from the quiet of Eureka Springs — a bigger energy, more dining options, a rooftop bar or two — Fayetteville delivers without requiring more than an hour of driving. Pair with Crystal Bridges in Bentonville for a full northwest Arkansas day.</p>
+      <p class="card-tip">✦ The Fayetteville square on a Saturday morning is one of the most pleasant places in Arkansas. Coffee, farmers market, and a walk through the Dickson Street arts district makes the perfect itinerary.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ITINERARY -->
+<div id="itinerary" class="dark-section">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header">
+      <p class="section-eyebrow" style="color:var(--gold-light);">Sample Schedule</p>
+      <h2 class="section-title">A <em style="color:var(--sage-light)">Five-Day</em> Honeymoon</h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">A suggested way to pace your time. Adjust freely — the best thing about Eureka Springs is there's no wrong way to explore it.</p>
+    </div>
+
+    <div class="itinerary">
+      <div class="day-block">
+        <div class="day-label">
+          <span class="day-number">01</span>
+          <span class="day-word">Arrive</span>
+          <div class="day-dot"></div>
+        </div>
+        <div class="day-content">
+          <h3 class="day-title">Settle In & Explore Downtown</h3>
+          <p class="day-body">Check into your lodging and let the pace of the town wash over you. Spend the afternoon wandering <strong><a href="https://www.google.com/search?q=Historic+Downtown+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Historic Downtown</a></strong> with no agenda — duck into galleries, find a coffee shop, ride the trolley to get your bearings. As evening approaches, head to <strong><a href="https://www.google.com/search?q=Basin+Spring+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Basin Spring Park</a></strong> to catch whatever live music or activity might be happening. For dinner, book <strong><a href="https://www.google.com/search?q=Le+Stick+Nouveau+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Le Stick Nouveau</a></strong> (Fri or Sat only) — if it's open, lead with your best dinner of the trip and let everything else be a pleasant surprise from there. Walk home slowly and let the town settle around you.</p>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">
+          <span class="day-number">02</span>
+          <span class="day-word">Explore</span>
+          <div class="day-dot"></div>
+        </div>
+        <div class="day-content">
+          <h3 class="day-title">Thorncrown, Lake & Winery</h3>
+          <p class="day-body">Start the morning at <strong><a href="https://www.google.com/search?q=Thorncrown+Chapel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Thorncrown Chapel</a></strong> — arrive early, before tour buses. Let yourself sit in a pew for a while. Afterward, drive to <strong><a href="https://www.google.com/search?q=Lake+Leatherwood+City+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Lake Leatherwood</a></strong> for a kayak paddle or a lakeside hike and a picnic. In the late afternoon, swing by <strong><a href="https://www.google.com/search?q=Railway+Winery+Vineyards+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Railway Winery</a></strong> (Fri–Sun) or <strong><a href="https://www.google.com/search?q=Keels+Creek+Winery+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Keels Creek</a></strong> for a flight of local wine on the patio. For dinner, <strong><a href="https://www.google.com/search?q=Grotto+Wood+Fired+Grill+Wine+Cave+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Grotto Wood-Fired Grill</a></strong> — request the cave section. End the evening at the <strong><a href="https://www.google.com/search?q=Crescent+Hotel+ghost+tour+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Crescent Hotel ghost tour</a></strong> for something genuinely memorable.</p>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">
+          <span class="day-number">03</span>
+          <span class="day-word">Restore</span>
+          <div class="day-dot"></div>
+        </div>
+        <div class="day-content">
+          <h3 class="day-title">Spa Morning, Slow Afternoon</h3>
+          <p class="day-body">Reserve your third morning for the spa. Book a couples massage at <strong><a href="https://www.google.com/search?q=Spa1905+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Spa1905</a></strong> or <strong><a href="https://www.google.com/search?q=New+Moon+Spa+Salon+Crescent+Hotel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">New Moon</a></strong> — let yourselves be genuinely pampered. Emerge in the early afternoon and take the <strong><a href="https://www.google.com/search?q=Underground+Eureka+Tour+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Underground Eureka Tour</a></strong> to see the town through new eyes. Spend the remaining hours doing more gallery browsing and finding a keepsake or two on Spring Street. For dinner, <strong><a href="https://www.google.com/search?q=Rogues+Manor+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Rogue's Manor</a></strong> is a fitting note — settle into the lounge with craft cocktails, order generously, and linger. Cap the evening at <strong><a href="https://www.google.com/search?q=Chelsea%27s+Corner+Cafe+Bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Chelsea's Corner</a></strong> for live music.</p>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">
+          <span class="day-number">04</span>
+          <span class="day-word">Adventure</span>
+          <div class="day-dot"></div>
+        </div>
+        <div class="day-content">
+          <h3 class="day-title">Buffalo River Day Trip</h3>
+          <p class="day-body">Head south for the day to the <strong><a href="https://www.google.com/search?q=Buffalo+National+River+Arkansas" target="_blank" rel="noopener">Buffalo National River</a></strong> — one of the most beautiful places in the American South. Walk the Lost Valley trail in the morning (easy, ends at a cave waterfall), then float a section of the river with a local outfitter in the afternoon. Stop in Jasper for lunch at the <strong><a href="https://www.google.com/search?q=Cliff+House+Inn+Jasper+Arkansas" target="_blank" rel="noopener">Cliff House Inn</a></strong> with sweeping valley views. Return to Eureka Springs in the early evening and head to <strong><a href="https://www.google.com/search?q=Grotto+Wood+Fired+Grill+Wine+Cave+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Grotto Wood-Fired Grill</a></strong> for dinner in the wine cave — the perfect end to your most adventurous day. Walk over to <strong><a href="https://www.google.com/search?q=Chelsea%27s+Corner+Cafe+Bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Chelsea's Corner</a></strong> afterward for a nightcap with live music.</p>
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">
+          <span class="day-number">05</span>
+          <span class="day-word">Farewell</span>
+          <div class="day-dot"></div>
+        </div>
+        <div class="day-content">
+          <h3 class="day-title">Crystal Bridges & a Slow Goodbye</h3>
+          <p class="day-body">Spend your final morning with a slow breakfast at <strong><a href="https://www.google.com/search?q=Local+Flavor+Cafe+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Local Flavor Café</a></strong>, then take one last unhurried walk through the streets that have become familiar. If you're driving east toward Bentonville, the morning is the perfect time to visit <strong><a href="https://www.google.com/search?q=Crystal+Bridges+Museum+American+Art+Bentonville+Arkansas" target="_blank" rel="noopener">Crystal Bridges Museum of American Art</a></strong> — free admission, world-class collection, and the most beautiful museum building in the mid-South. Linger over a long lunch before heading home. Leave knowing that Eureka Springs rewards return visits — and that you've only just begun to know it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<section id="tips">
+  <div class="section-header">
+    <p class="section-eyebrow">Before You Go</p>
+    <h2 class="section-title">Good to <em>Know</em></h2>
+    <div class="section-rule"></div>
+  </div>
+</section>
+
+<div class="highlight-strip" style="margin-top:-4rem;">
+  <div class="tips-row">
+    <div class="tip-pill">
+      <strong>Best Season</strong>
+      Spring (April–May) and Fall (Sept–Oct) are peak romantic seasons. Fall foliage in the Ozarks is spectacular. Summers are warm and busy; winters are quieter and atmospheric.
+    </div>
+    <div class="tip-pill">
+      <strong>Getting Around</strong>
+      The historic trolley is your best friend downtown. Streets are narrow, steep, and old — parking once and walking/trolleying is far more pleasant than driving between stops.
+    </div>
+    <div class="tip-pill">
+      <strong>Tuesday & Wednesday</strong>
+      Many downtown restaurants and shops are closed Tue–Wed. Plan your dining and gallery days for Thursday through Monday to avoid disappointment.
+    </div>
+    <div class="tip-pill">
+      <strong>Book Ahead</strong>
+      Le Stick Nouveau, spa appointments, and the Great Passion Play all require advance reservations — especially on weekends. Don't show up hoping to wing it.
+    </div>
+    <div class="tip-pill">
+      <strong>Mobility Note</strong>
+      Downtown involves hills, stairs, and uneven cobblestone. Wear comfortable walking shoes. For anyone with mobility concerns, the golf cart tour is a wonderful alternative.
+    </div>
+    <div class="tip-pill">
+      <strong>Tell Them It's Your Honeymoon</strong>
+      Eureka Springs is well-practiced at celebrating couples. Mention it when booking — many restaurants and spas will add small touches that make the experience even more special.
+    </div>
+    <div class="tip-pill">
+      <strong>Day Trip Timing</strong>
+      Buffalo River and Crystal Bridges are both full-day commitments. Don't try to combine them — give each its own day for the best experience.
+    </div>
+    <div class="tip-pill">
+      <strong>Cell Service</strong>
+      Service can be spotty in the Ozark valleys and on back roads. Download offline maps before day trips and let your lodging know your general plans if you're heading into the backcountry.
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-title">Wishing you the most beautiful beginning.</p>
+  <p class="footer-sub" style="margin-top:0.5rem;">Eureka Springs, Arkansas · The Ozarks</p>
+</footer>
+
+</body>
+</html>

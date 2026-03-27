@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Eureka Springs Hiking Reading List</title>
+  <style>
+    :root {
+      --pine: #183328;
+      --forest: #255744;
+      --river: #2f7fb0;
+      --sand: #f4efe5;
+      --paper: #fffdfa;
+      --ink: #1f2722;
+      --muted: #617068;
+      --gold: #c78f37;
+      --reddit: #ff6b35;
+      --blog: #4a8b5b;
+      --shadow: 0 16px 40px rgba(20, 31, 25, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(199, 143, 55, 0.18), transparent 28%),
+        linear-gradient(180deg, #edf3ee 0%, #f7f2e9 100%);
+      color: var(--ink);
+      padding: 0 0 40px;
+    }
+
+    header {
+      padding: 18px 16px 14px;
+      background: linear-gradient(135deg, var(--pine), var(--forest));
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(17, 34, 27, 0.2);
+    }
+
+    h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .subhead {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.84);
+      margin-bottom: 12px;
+      max-width: 44rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 13px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .btn.primary {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--pine);
+    }
+
+    main {
+      padding: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .note,
+    .card {
+      background: rgba(255, 253, 250, 0.96);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .note p,
+    .card p,
+    li {
+      font-size: 0.94rem;
+      line-height: 1.55;
+      color: #334039;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .badge.reddit {
+      background: #fff1eb;
+      color: #b6481f;
+    }
+
+    .badge.blog {
+      background: #edf6ef;
+      color: #28533b;
+    }
+
+    .title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 5px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 10px;
+    }
+
+    .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--pine);
+      color: #fff;
+    }
+
+    .links a.secondary {
+      background: #dfe9e1;
+      color: var(--pine);
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Eureka Hiking Reading</h1>
+    <p class="subhead">A small reading list for your trip: local Reddit threads for what hikers actually say about Eureka Springs trails, plus official and blog-style pages that help make sense of the local walks and the bigger scenic day trips.</p>
+    <div class="actions">
+      <a class="btn primary" href="/Users/dfxstudio/Claude/index.html">Back to hub</a>
+      <a class="btn primary" href="/Users/dfxstudio/Claude/hiking.html">Back to map</a>
+      <a class="btn secondary" href="https://www.nps.gov/buff/planyourvisit/hiking-trails.htm" target="_blank" rel="noopener noreferrer">NPS trails</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="note">
+      <div class="section-title">Quick Takeaways</div>
+      <ul>
+        <li>The local Reddit advice is pretty consistent: for close-to-town hiking, people keep pointing visitors to Black Bass Lake, Lake Leatherwood, and the Passion Play trails.</li>
+        <li>Lost Valley is the most beginner-friendly scenic day trip, while Whitaker Point is the most iconic but not the quietest or easiest drive.</li>
+        <li>White Rock keeps showing up as the quieter big-view alternative when people want atmosphere and space more than the famous photo stop.</li>
+        <li>For your late-April timing, spring mud, slick rock, ticks, and rougher approach roads matter more than heat or hunting-season closures.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Can anyone recommend local hikes close to downtown ES for novice hikers?</div>
+      <div class="meta">r/eurekasprings • January 19, 2023</div>
+      <p>This is the best direct match for your trip style. The replies point visitors toward Black Bass Lake, Lake Leatherwood, and the Passion Play trails, and one local specifically calls out Black Bass as a favorite chill hike.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/10gfcn4/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Lake Leatherwood access</div>
+      <div class="meta">r/eurekasprings • April 23, 2025</div>
+      <p>Useful for understanding how locals think about access to the Leatherwood trail network. The short replies reinforce that there are many ways into the system and also remind you that spring means ticks.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/1k67ppp/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Are the trails muddy to hike this weekend?</div>
+      <div class="meta">r/eurekasprings • March 15, 2024</div>
+      <p>Worth reading because it is the most useful real-world spring-condition note I found for Lake Leatherwood. The follow-up mentions the Fuller / Beecham area around the lake being manageable even after rain, with just some slippery rocks.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/1bfrnuc/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">How to guide on Eureka Springs</div>
+      <div class="meta">r/eurekasprings • December 20, 2025</div>
+      <p>Good broader local thread for trip-planning context. It is not just a hiking thread, but locals still call out Lake Leatherwood and mention picking up a trail map for outdoor tips.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/eurekasprings/comments/1prpluz/how_to_guide_on_eureka_springs/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Getting to Hawksbill Crag / Whitaker Point</div>
+      <div class="meta">r/Arkansas • September 4, 2024</div>
+      <p>This one is useful because it is not about the beauty of the trail, it is about the road. The replies are blunt that low-clearance cars are a bad idea when the forest road is rough, which is the main practical thing visitors tend to underestimate.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/Arkansas/comments/1f93ao6/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Advice on a day or two of hiking in the Buffalo National River area</div>
+      <div class="meta">r/Arkansas • October 29, 2024</div>
+      <p>Good planning thread if you are deciding whether to combine Lost Valley with other Buffalo-area stops. It helps set expectations for how people chain the major trails together in a single day.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/Arkansas/comments/1geh9y0/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge reddit">Reddit</div>
+      <div class="title">Hiking and Camping at White Rock Mountain Arkansas</div>
+      <div class="meta">r/CampingandHiking • May 22, 2024</div>
+      <p>A short but useful White Rock sanity check. The thread reinforces the rim trail as a quiet panoramic loop and makes the area sound more peaceful and camp-like than the busier postcard hikes.</p>
+      <div class="links">
+        <a href="https://www.reddit.com/r/CampingandHiking/comments/1cy31l4/" target="_blank" rel="noopener noreferrer">Open Reddit thread</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Official Local</div>
+      <div class="title">Eureka Springs Parks: Lake Leatherwood and Black Bass Lake</div>
+      <div class="meta">Official local parks page</div>
+      <p>This is the most useful official local source for your close-to-town options. It confirms Leatherwood's large trail system and the Black Bass dam / spillway no-access area.</p>
+      <div class="links">
+        <a href="https://www.eurekaparks.com/parks" target="_blank" rel="noopener noreferrer">Open page</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Local Guide</div>
+      <div class="title">Black Bass Lake trail guide</div>
+      <div class="meta">Visit Eureka Springs</div>
+      <p>Best local trail-specific read for Black Bass. It breaks down the trail system into named segments and makes it easier to picture the difference between the easy shoreline feel and the rockier bluff sections.</p>
+      <div class="links">
+        <a href="https://www.visiteurekasprings.com/black-bass-lake-trails/" target="_blank" rel="noopener noreferrer">Open guide</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Local Guide</div>
+      <div class="title">Six Reasons Why Eureka Springs is an Outdoor Wonderland</div>
+      <div class="meta">Visit Eureka Springs • updated July 11, 2025</div>
+      <p>This is a nice orientation read if you want one page that frames the local outdoor options together. The hiking section specifically points to Black Bass and Lake Leatherwood as the relaxed and larger-scale local trail picks.</p>
+      <div class="links">
+        <a href="https://www.visiteurekasprings.com/six-reasons-why-eureka-springs-is-an-outdoor-wonderland/" target="_blank" rel="noopener noreferrer">Open article</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Official NPS</div>
+      <div class="title">Hike the Lost Valley Trail</div>
+      <div class="meta">Buffalo National River</div>
+      <p>This is the single best official page for Lost Valley. It lays out the difficulty, the day-use note, the first half-mile accessibility info, and the no-pets rule clearly enough to plan around.</p>
+      <div class="links">
+        <a href="https://www.nps.gov/thingstodo/hike-the-lost-valley-trail.htm" target="_blank" rel="noopener noreferrer">Open trail page</a>
+        <a class="secondary" href="https://www.nps.gov/buff/planyourvisit/pets.htm" target="_blank" rel="noopener noreferrer">Pets page</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Official USFS</div>
+      <div class="title">Whitaker Point trailhead</div>
+      <div class="meta">Ozark-St. Francis National Forests</div>
+      <p>Use this for the current basics: exact coordinates, open status, restroom note, and the fact that potable water is not available. It is the cleanest official page for the trailhead itself.</p>
+      <div class="links">
+        <a href="https://www.fs.usda.gov/r08/ozark-stfrancis/recreation/whitaker-point-hawksbill-crag-trailhead" target="_blank" rel="noopener noreferrer">Open trailhead page</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Official + Feature</div>
+      <div class="title">White Rock Mountain overview</div>
+      <div class="meta">Arkansas.com and Recreation.gov</div>
+      <p>These two together make White Rock much easier to understand. Arkansas.com gives the scenic overview, while Recreation.gov gives the practical notes about parking, cliffs, and pack-it-in / pack-it-out expectations.</p>
+      <div class="links">
+        <a href="https://www.arkansas.com/articles/wild-and-scenic-beauty-white-rock-mountain" target="_blank" rel="noopener noreferrer">Open Arkansas.com</a>
+        <a class="secondary" href="https://www.recreation.gov/camping/campgrounds/255177/campsites" target="_blank" rel="noopener noreferrer">Open Recreation.gov</a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="badge blog">Official State Park</div>
+      <div class="title">Hobbs easy-trail backup</div>
+      <div class="meta">Arkansas State Parks</div>
+      <p>These pages are worth saving if weather turns or you decide you want a lower-stakes hiking day. They give exact trailhead details and make Hobbs one of the easiest backup calls on the whole map.</p>
+      <div class="links">
+        <a href="https://www.arkansasstateparks.com/trails/sinking-stream-trail" target="_blank" rel="noopener noreferrer">Sinking Stream</a>
+        <a class="secondary" href="https://www.arkansasstateparks.com/trails/historic-van-winkle-trail" target="_blank" rel="noopener noreferrer">Van Winkle</a>
+      </div>
+    </section>
+
+    <section class="note">
+      <div class="section-title">Best Reads First</div>
+      <ul>
+        <li>Start with the local novice-hike Reddit thread from r/eurekasprings.</li>
+        <li>Then read the Black Bass guide and the Eureka Parks page to lock in your easy local options.</li>
+        <li>If you want one scenic day trip, read the Lost Valley NPS page next.</li>
+        <li>Only move to Whitaker Point or White Rock after checking that you feel good about the drive and trail style.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
