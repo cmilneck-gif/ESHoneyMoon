@@ -436,6 +436,126 @@
   /* —— ITINERARY —— */
   .itinerary { max-width: 720px; margin: 0 auto; }
 
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 4rem;
+  }
+
+  .calendar-day {
+    min-height: 185px;
+    background: var(--warm-white);
+    border: 1px solid rgba(184,147,74,0.18);
+    box-shadow: 0 8px 24px rgba(20, 26, 20, 0.06);
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .calendar-top {
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid rgba(184,147,74,0.16);
+  }
+
+  .day-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .day-tag {
+    display: inline-block;
+    padding: 0.32rem 0.45rem;
+    font-size: 0.55rem;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: white;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .day-tag.mountain { background: #7a9e7e; }
+  .day-tag.eureka { background: #c9907a; }
+  .day-tag.royal { background: #b8934a; }
+
+  .calendar-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--forest);
+  }
+
+  .calendar-month {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+
+  .event-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .event-block {
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    padding: 0.45rem 0.55rem;
+  }
+
+  .event-time {
+    display: block;
+    font-size: 0.56rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.18rem;
+    font-weight: 500;
+  }
+
+  .event-title {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.98rem;
+    line-height: 1.15;
+    color: var(--forest);
+    margin-bottom: 0.1rem;
+  }
+
+  .event-title a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(184,147,74,0.35);
+  }
+
+  .event-copy {
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--mid);
+  }
+
+  .calendar-day.empty .event-stack {
+    flex: 1;
+  }
+
+  .calendar-day.empty {
+    background: rgba(250, 247, 242, 0.55);
+  }
+
+  .calendar-day.empty .event-stack::after {
+    content: "";
+    display: block;
+    flex: 1;
+    border: 1px dashed rgba(184,147,74,0.14);
+    border-radius: 4px;
+  }
+
   .day-block {
     display: grid;
     grid-template-columns: 80px 1fr;
@@ -496,6 +616,12 @@
     section { padding: 4rem 1.5rem; }
     .hero-gobo-wrap { width: 150px; height: 150px; }
     .hero-botanical { width: 200px; }
+    .calendar-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .calendar-day {
+      min-height: 180px;
+    }
   }
 </style>
 </head>
@@ -543,16 +669,16 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-link" href="#homebase">Your Cabin</a>
+  <a class="nav-link" href="#homebase">Calendar</a>
   <a class="nav-link" href="#sights">Sights</a>
   <a class="nav-link" href="#spa">Spa & Wellness</a>
   <a class="nav-link" href="#dining">Dining</a>
+  <a class="nav-link" href="#cocktails">Cocktails</a>
   <a class="nav-link" href="#wine">Wine</a>
   <a class="nav-link" href="#outdoors">Outdoors</a>
   <a class="nav-link" href="#entertainment">Entertainment</a>
   <a class="nav-link" href="#unique">Only in Eureka</a>
   <a class="nav-link" href="#daytrips">Day Trips</a>
-  <a class="nav-link" href="#itinerary">Sample Days</a>
   <a class="nav-link" href="#tips">Good to Know</a>
 </nav>
 
@@ -560,23 +686,195 @@
 <div id="homebase" style="background:var(--warm-white); padding:6rem 2rem; border-bottom: 1px solid rgba(184,147,74,0.15);">
   <div style="max-width:1100px; margin:0 auto;">
     <div class="section-header">
-      <p class="section-eyebrow">Your Home Base</p>
-      <h2 class="section-title">From <em>Your Doorstep</em></h2>
+      <p class="section-eyebrow">Trip Calendar</p>
+      <h2 class="section-title">April <em>19-25</em></h2>
       <div class="section-rule"></div>
-      <p class="section-intro">Your cabin at <strong style="color:var(--forest); font-weight:400;">486 CR-210</strong> sits about 5 miles west of downtown Eureka Springs — close enough to everything, far enough from everything. Blue Spring Heritage Center is literally on your road. Beaver Lake trout fishing and Thorncrown Chapel are both under 15 minutes. Here's what's within easy reach.</p>
     </div>
 
-    <!-- CABIN PHOTOS -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:2rem 0 3.5rem;">
-      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-        <img src="IMG_8270.jpg" alt="Cabin exterior at sunset" style="width:100%; height:100%; object-fit:cover; display:block;">
+    <div class="calendar-grid">
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag mountain" href="https://maps.apple.com/?q=11348%20Locust%20Mountain%20Road%2C%20Mountainburg%2C%20AR%2072946" target="_blank" rel="noopener">11348 Locust Mountain Rd</a>
+          </div>
+          <div class="calendar-date">19</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-time">3:00 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=11348%20Locust%20Mountain%20Road%2C%20Mountainburg%2C%20AR%2072946" target="_blank" rel="noopener">Check in: Mountainburg</a></span>
+          </div>
+        </div>
       </div>
-      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-        <img src="IMG_8271.jpg" alt="Cabin interior with fireplace" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag mountain" href="https://maps.apple.com/?q=11348%20Locust%20Mountain%20Road%2C%20Mountainburg%2C%20AR%2072946" target="_blank" rel="noopener">11348 Locust Mountain Rd</a>
+            <a class="day-tag eureka" href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">486 County Road 210</a>
+          </div>
+          <div class="calendar-date">20</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-time">11:00 AM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=11348%20Locust%20Mountain%20Road%2C%20Mountainburg%2C%20AR%2072946" target="_blank" rel="noopener">Check out: Mountainburg</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-time">2:00-2:30 PM · 2:40-3:15 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=Palace%20Hotel%20and%20Bath%20House%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Palace Bath House</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-time">3:00 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">Check in: Eureka Springs</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Ermilio%27s%20Italian%20Home%20Cooking%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Dinner: Ermilio's (no reservation)</a></span>
+          </div>
+        </div>
       </div>
-      <div style="border-radius:6px; overflow:hidden; aspect-ratio:4/3; border:1px solid rgba(184,147,74,0.18); box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-        <img src="IMG_8272.jpg" alt="Ozark river valley views" style="width:100%; height:100%; object-fit:cover; display:block;">
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag eureka" href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">486 County Road 210</a>
+          </div>
+          <div class="calendar-date">21</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-title">Sleep in</span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=The%20Squatch%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Breakfast: The Squatch</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=White%20River%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Fishing on the White River</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Pinky%20Swear%2C%20Rogers%2C%20AR" target="_blank" rel="noopener">Dinner + drinks: Pinky Swear</a></span>
+            <div class="event-copy">Rogers, AR · 50 minutes away</div>
+          </div>
+        </div>
       </div>
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag eureka" href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">486 County Road 210</a>
+          </div>
+          <div class="calendar-date">22</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Riverview%20Resort%20Cafe%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Breakfast: Riverview Resort Cafe</a></span>
+            <div class="event-copy">6 minutes away · Opens at 6 AM</div>
+          </div>
+          <div class="event-block">
+            <span class="event-time">9:30-11:30 AM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">In-cabin massage</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Blue%20Spring%20Heritage%20Center%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Blue Spring Heritage Center</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Thorncrown%20Chapel%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Thorncrown Chapel</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-time">8:00 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=Grotto%20Wood%20Fired%20Grill%20and%20Wine%20Cave%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Dinner: Grotto</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag eureka" href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">486 County Road 210</a>
+          </div>
+          <div class="calendar-date">23</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Mud%20Street%20Cafe%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Breakfast: Mud Street Cafe</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-title"><a href="https://maps.apple.com/?q=Crystal%20Bridges%20Museum%20of%20American%20Art%2C%20Bentonville%2C%20AR" target="_blank" rel="noopener">Crystal Bridges Museum</a></span>
+            <div class="event-copy">Bentonville, AR · 60 minutes away</div>
+          </div>
+          <div class="event-block">
+            <span class="event-time">7:00 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=Rogue%27s%20Manor%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Dinner: Rogue's Manor</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag eureka" href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">486 County Road 210</a>
+            <a class="day-tag royal" href="https://maps.apple.com/?q=1473%20Timberlake%20Drive%2C%20Royal%2C%20AR%2071968" target="_blank" rel="noopener">1473 Timberlake Drive</a>
+          </div>
+          <div class="calendar-date">24</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-time">11:00 AM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=486%20County%20Road%20210%2C%20Eureka%20Springs%2C%20AR%2072632" target="_blank" rel="noopener">Check out: Eureka Springs</a></span>
+          </div>
+          <div class="event-block">
+            <span class="event-time">4:00 PM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=1473%20Timberlake%20Drive%2C%20Royal%2C%20AR%2071968" target="_blank" rel="noopener">Check in: Royal</a></span>
+          </div>
+        </div>
+      </div>
+      <div class="calendar-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <a class="day-tag royal" href="https://maps.apple.com/?q=1473%20Timberlake%20Drive%2C%20Royal%2C%20AR%2071968" target="_blank" rel="noopener">1473 Timberlake Drive</a>
+          </div>
+          <div class="calendar-date">25</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="event-block">
+            <span class="event-time">11:00 AM</span>
+            <span class="event-title"><a href="https://maps.apple.com/?q=1473%20Timberlake%20Drive%2C%20Royal%2C%20AR%2071968" target="_blank" rel="noopener">Check out: Royal</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin:0 0 3.5rem;">
+      <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); font-weight:400; margin-bottom:1.5rem; text-align:center;">Where You're Staying</p>
+      <div class="cards-grid">
+        <div class="card">
+          <p class="card-tag">April 19-20 · First Stop</p>
+          <h3 class="card-title"><a href="https://www.airbnb.com/rooms/1120994600507747565?photo_id=1884470618&source_impression_id=p3_1776200910_P3n9xB038phUiH2A&previous_page_section_name=1000" target="_blank" rel="noopener">Mountainburg Cabin</a></h3>
+          <p class="card-meta">11348 Locust Mountain Road, Mountainburg, AR 72946</p>
+          <p class="card-body">Check in <strong>April 19 at 3:00 PM</strong>. Check out <strong>April 20 at 11:00 AM</strong>.</p>
+        </div>
+        <div class="card">
+          <p class="card-tag">April 20-24 · Main Stay</p>
+          <h3 class="card-title"><a href="https://www.airbnb.com/trips/shared/e1613bcc-7587-4f15-a271-49fd587d8b7b?confCode=HMNXF343ZB&principal_token=22e777ba-3750-49aa-9cb3-01d06e86eead&s=67&unique_share_id=aa9492e6-99e7-442a-8059-7b2491d14b18" target="_blank" rel="noopener">Eureka Springs Cabin</a></h3>
+          <p class="card-meta">486 County Road 210, Eureka Springs, AR 72632</p>
+          <p class="card-body">Check in <strong>April 20 at 3:00 PM</strong>. Check out <strong>April 24 at 11:00 AM</strong>.</p>
+        </div>
+        <div class="card">
+          <p class="card-tag">April 24-25 · Final Night</p>
+          <h3 class="card-title"><a href="https://www.airbnb.com/trips/shared/ce46701a-8fb1-42fa-9fbc-32407efd94a5?confCode=HM4NECMMJR&principal_token=af9d7d36-00d1-4e42-8e11-dc501e5a04d9&s=67&unique_share_id=a99124ea-0dbc-4781-9f8e-0faed69960c2" target="_blank" rel="noopener">Royal Barn Stay</a></h3>
+          <p class="card-meta">1473 Timberlake Drive, Royal, AR 71968</p>
+          <p class="card-body">Check in <strong>April 24 at 4:00 PM</strong>. Check out <strong>April 25 at 11:00 AM</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-bottom:2.5rem;">
+      <p class="section-eyebrow">Your Cabin</p>
+      <h2 class="section-title">From <em>Your Doorstep</em></h2>
+      <div class="section-rule"></div>
+      <p class="section-intro">Your Eureka Springs cabin at <strong style="color:var(--forest); font-weight:400;">486 County Road 210</strong> is still the emotional center of the trip. Once you arrive there on April 20, these are the closest fishing, hiking, dining, and outing ideas around that stay.</p>
     </div>
 
     <!-- FISHING -->
@@ -655,7 +953,7 @@
           <p class="card-tip">✦ The lake-loop walk followed by a picnic on the dam is one of the best free afternoons in the area.</p>
         </div>
         <div class="card">
-          <span class="card-icon"><img src="https://www.arkansasstateparks.com/sites/default/files/styles/listing_images/public/2025-10/e8b2d7d36b8d3ff410341071bc472eb3_CZP_8545.jpeg?itok=V_AjkFMb" alt="Hobbs State Park hiking" onerror="this.style.display='none'"></span>
+          <span class="card-icon"><img src="Beaver%20Lake%20fishing%20Dam%20Site%20Park%20Eureka%20Springs%20Arkansas.webp" alt="Hobbs State Park and Beaver Lake bluffs" onerror="this.style.display='none'"></span>
           <p class="card-tag">Bluff Views · Beaver Lake</p>
           <h3 class="card-title"><a href="https://www.google.com/search?q=Hobbs+State+Park+Dogwood+Trail+Beaver+Lake+Arkansas" target="_blank" rel="noopener">Hobbs State Park — Dogwood Trail</a></h3>
           <p class="card-meta">~20 min from cabin · Free admission</p>
@@ -1020,6 +1318,52 @@
 
 <div class="full-divider"></div>
 
+<!-- COCKTAILS -->
+<section id="cocktails">
+  <div class="section-header">
+    <p class="section-eyebrow">Best Pours</p>
+    <h2 class="section-title">Cocktails & <em>Nightcaps</em></h2>
+    <div class="section-rule"></div>
+    <p class="section-intro">For the strongest cocktail stops, I would start with The Spring on Main and Jack Rabbett's, then use White Rabbit or Rogue's Manor depending on whether you want late-night energy or a moodier lounge. That ranking is an inference from current official pages plus recent review language around craft cocktails, mixologists, and bartender service.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <p class="card-tag">Craft Cocktails · Best Bartender Energy</p>
+      <h3 class="card-title"><a href="https://thespringonmain.com/" target="_blank" rel="noopener">The Spring on Main</a></h3>
+      <p class="card-meta">55 South Main St · Signature cocktails menu</p>
+      <p class="card-body">This is the clearest cocktail-first recommendation I found. The restaurant's own site explicitly highlights craft cocktails and a dedicated signature cocktails menu. Recent OpenTable feedback also specifically praises the bartender for being attentive while still handling multiple responsibilities well, which is exactly the kind of signal I want when the question is about the best bartenders, not just the best room.</p>
+      <p class="card-tip">✦ Best all-around cocktail stop if you want polished drinks and a strong chance of good bar service.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-tag">Whisky Bar · Expert Mixologists</p>
+      <h3 class="card-title"><a href="https://basinpark.com/eat-drink/jack-rabbetts-whisky-bar/" target="_blank" rel="noopener">Jack Rabbett's Whisky Bar</a></h3>
+      <p class="card-meta">12 Spring St · Basin Park Hotel</p>
+      <p class="card-body">The Basin Park Hotel's own bar page makes this one easy to recommend: it says their expert mixologists will serve you the perfect cocktail. That puts Jack Rabbett's near the top if you want a real bar-first stop downtown, especially for whiskey drinks, classics, and a more dedicated cocktail-bar feel than a restaurant lounge.</p>
+      <p class="card-tip">✦ My pick for an Old Fashioned, Manhattan, or a true post-dinner downtown nightcap.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-tag">Hidden Lounge · Playful Drinks</p>
+      <h3 class="card-title"><a href="https://www.visiteurekasprings.com/missys-white-rabbit-lounge/" target="_blank" rel="noopener">Missy's White Rabbit Lounge</a></h3>
+      <p class="card-meta">19 1/2 Spring St · Lounge · Live music energy</p>
+      <p class="card-body">White Rabbit is less polished-date-night and more hidden-lounge energy, but it still stands out. Visit Eureka Springs describes it as an eclectic lounge, Southern Living specifically called out playful cocktails there, and recent review summaries mention kind, knowledgeable bartenders. That makes it a strong second-stop option when you want drinks with more personality than formality.</p>
+      <p class="card-tip">✦ Best move if you want cocktails after dinner and do not mind a livelier room.</p>
+    </div>
+
+    <div class="card">
+      <p class="card-tag">Romantic Lounge · Dinner Cocktails</p>
+      <h3 class="card-title"><a href="https://www.google.com/search?q=Rogues+Manor+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Rogue's Manor</a></h3>
+      <p class="card-meta">124 Spring St · Victorian dining room and bar</p>
+      <p class="card-body">If you want cocktails in a room that still feels intimate and date-night ready, Rogue's Manor belongs on the list. The bar program already stood out enough to make it into the dining section, and the earlier review research on this guide kept surfacing bartender Jessica by name. It is the strongest answer when you want romantic atmosphere first and a very good drink second.</p>
+      <p class="card-tip">✦ Best pre-dinner cocktail spot when you want a darker, moodier room than the livelier downtown bars.</p>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
 <!-- WINE -->
 <div id="wine" style="background:var(--cream); padding:6rem 2rem;">
   <div style="max-width:1100px; margin:0 auto;">
@@ -1279,80 +1623,6 @@
     </div>
   </div>
 </section>
-
-<!-- ITINERARY -->
-<div id="itinerary" class="dark-section">
-  <div style="max-width:1100px; margin:0 auto;">
-    <div class="section-header">
-      <p class="section-eyebrow" style="color:var(--gold-light);">Sample Schedule</p>
-      <h2 class="section-title">A <em style="color:var(--sage-light)">Five-Day</em> Honeymoon</h2>
-      <div class="section-rule"></div>
-      <p class="section-intro">A suggested way to pace your time. Adjust freely — the best thing about Eureka Springs is there's no wrong way to explore it.</p>
-    </div>
-
-    <div class="itinerary">
-      <div class="day-block">
-        <div class="day-label">
-          <span class="day-number">01</span>
-          <span class="day-word">Arrive</span>
-          <div class="day-dot"></div>
-        </div>
-        <div class="day-content">
-          <h3 class="day-title">Settle In & Explore Downtown</h3>
-          <p class="day-body">Check into your lodging and let the pace of the town wash over you. Spend the afternoon wandering <strong><a href="https://www.google.com/search?q=Historic+Downtown+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Historic Downtown</a></strong> with no agenda — duck into galleries, find a coffee shop, ride the trolley to get your bearings. As evening approaches, head to <strong><a href="https://www.google.com/search?q=Basin+Spring+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Basin Spring Park</a></strong> to catch whatever live music or activity might be happening. For dinner, book <strong><a href="https://www.google.com/search?q=Le+Stick+Nouveau+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Le Stick Nouveau</a></strong> (Fri or Sat only) — if it's open, lead with your best dinner of the trip and let everything else be a pleasant surprise from there. Walk home slowly and let the town settle around you.</p>
-        </div>
-      </div>
-
-      <div class="day-block">
-        <div class="day-label">
-          <span class="day-number">02</span>
-          <span class="day-word">Explore</span>
-          <div class="day-dot"></div>
-        </div>
-        <div class="day-content">
-          <h3 class="day-title">Thorncrown, Lake & Winery</h3>
-          <p class="day-body">Start the morning at <strong><a href="https://www.google.com/search?q=Thorncrown+Chapel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Thorncrown Chapel</a></strong> — arrive early, before tour buses. Let yourself sit in a pew for a while. Afterward, drive to <strong><a href="https://www.google.com/search?q=Lake+Leatherwood+City+Park+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Lake Leatherwood</a></strong> for a kayak paddle or a lakeside hike and a picnic. In the late afternoon, swing by <strong><a href="https://www.google.com/search?q=Railway+Winery+Vineyards+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Railway Winery</a></strong> (Fri–Sun) or <strong><a href="https://www.google.com/search?q=Keels+Creek+Winery+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Keels Creek</a></strong> for a flight of local wine on the patio. For dinner, <strong><a href="https://www.google.com/search?q=Grotto+Wood+Fired+Grill+Wine+Cave+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Grotto Wood-Fired Grill</a></strong> — request the cave section. End the evening at the <strong><a href="https://www.google.com/search?q=Crescent+Hotel+ghost+tour+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Crescent Hotel ghost tour</a></strong> for something genuinely memorable.</p>
-        </div>
-      </div>
-
-      <div class="day-block">
-        <div class="day-label">
-          <span class="day-number">03</span>
-          <span class="day-word">Restore</span>
-          <div class="day-dot"></div>
-        </div>
-        <div class="day-content">
-          <h3 class="day-title">Spa Morning, Slow Afternoon</h3>
-          <p class="day-body">Reserve your third morning for the spa. Book a couples massage at <strong><a href="https://www.google.com/search?q=Spa1905+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Spa1905</a></strong> or <strong><a href="https://www.google.com/search?q=New+Moon+Spa+Salon+Crescent+Hotel+Eureka+Springs+Arkansas" target="_blank" rel="noopener">New Moon</a></strong> — let yourselves be genuinely pampered. Emerge in the early afternoon and take the <strong><a href="https://www.google.com/search?q=Underground+Eureka+Tour+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Underground Eureka Tour</a></strong> to see the town through new eyes. Spend the remaining hours doing more gallery browsing and finding a keepsake or two on Spring Street. For dinner, <strong><a href="https://www.google.com/search?q=Rogues+Manor+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Rogue's Manor</a></strong> is a fitting note — settle into the lounge with craft cocktails, order generously, and linger. Cap the evening at <strong><a href="https://www.google.com/search?q=Chelsea%27s+Corner+Cafe+Bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Chelsea's Corner</a></strong> for live music.</p>
-        </div>
-      </div>
-
-      <div class="day-block">
-        <div class="day-label">
-          <span class="day-number">04</span>
-          <span class="day-word">Adventure</span>
-          <div class="day-dot"></div>
-        </div>
-        <div class="day-content">
-          <h3 class="day-title">Buffalo River Day Trip</h3>
-          <p class="day-body">Head south for the day to the <strong><a href="https://www.google.com/search?q=Buffalo+National+River+Arkansas" target="_blank" rel="noopener">Buffalo National River</a></strong> — one of the most beautiful places in the American South. Walk the Lost Valley trail in the morning (easy, ends at a cave waterfall), then float a section of the river with a local outfitter in the afternoon. Stop in Jasper for lunch at the <strong><a href="https://www.google.com/search?q=Cliff+House+Inn+Jasper+Arkansas" target="_blank" rel="noopener">Cliff House Inn</a></strong> with sweeping valley views. Return to Eureka Springs in the early evening and head to <strong><a href="https://www.google.com/search?q=Grotto+Wood+Fired+Grill+Wine+Cave+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Grotto Wood-Fired Grill</a></strong> for dinner in the wine cave — the perfect end to your most adventurous day. Walk over to <strong><a href="https://www.google.com/search?q=Chelsea%27s+Corner+Cafe+Bar+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Chelsea's Corner</a></strong> afterward for a nightcap with live music.</p>
-        </div>
-      </div>
-
-      <div class="day-block">
-        <div class="day-label">
-          <span class="day-number">05</span>
-          <span class="day-word">Farewell</span>
-          <div class="day-dot"></div>
-        </div>
-        <div class="day-content">
-          <h3 class="day-title">Crystal Bridges & a Slow Goodbye</h3>
-          <p class="day-body">Spend your final morning with a slow breakfast at <strong><a href="https://www.google.com/search?q=Local+Flavor+Cafe+Eureka+Springs+Arkansas" target="_blank" rel="noopener">Local Flavor Café</a></strong>, then take one last unhurried walk through the streets that have become familiar. If you're driving east toward Bentonville, the morning is the perfect time to visit <strong><a href="https://www.google.com/search?q=Crystal+Bridges+Museum+American+Art+Bentonville+Arkansas" target="_blank" rel="noopener">Crystal Bridges Museum of American Art</a></strong> — free admission, world-class collection, and the most beautiful museum building in the mid-South. Linger over a long lunch before heading home. Leave knowing that Eureka Springs rewards return visits — and that you've only just begun to know it.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- TIPS -->
 <section id="tips">
