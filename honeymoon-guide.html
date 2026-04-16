@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eureka Springs — A Honeymoon Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --cream: #f5f0e8;
@@ -481,6 +481,10 @@
   .day-tag.mountain { background: #7a9e7e; }
   .day-tag.eureka { background: #c9907a; }
   .day-tag.royal { background: #b8934a; }
+  .day-tag.wedding {
+    background: linear-gradient(135deg, #b8934a, #d8b76d);
+    color: #fffaf0;
+  }
 
   .calendar-date {
     font-family: 'Cormorant Garamond', serif;
@@ -546,6 +550,47 @@
 
   .calendar-day.empty {
     background: rgba(250, 247, 242, 0.55);
+  }
+
+  .calendar-day.wedding-day {
+    background:
+      radial-gradient(circle at top left, rgba(255,255,255,0.85), transparent 42%),
+      linear-gradient(160deg, rgba(184,147,74,0.22), rgba(201,144,122,0.18)),
+      #fffaf2;
+    border: 1px solid rgba(184,147,74,0.34);
+    box-shadow: 0 16px 32px rgba(184,147,74,0.16);
+  }
+
+  .calendar-day.wedding-day .calendar-top {
+    border-bottom-color: rgba(184,147,74,0.28);
+  }
+
+  .calendar-day.wedding-day .calendar-date {
+    color: #9b6b33;
+  }
+
+  .calendar-day.wedding-day .event-stack {
+    flex: 1;
+  }
+
+  .wedding-fill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.2rem 0.9rem;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.76), rgba(255,248,236,0.92));
+    border: 1px solid rgba(184,147,74,0.22);
+  }
+
+  .wedding-fill .event-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    line-height: 1.05;
+    color: #9b6b33;
+    margin-bottom: 0;
   }
 
   .calendar-day.empty .event-stack::after {
@@ -687,11 +732,25 @@
   <div style="max-width:1100px; margin:0 auto;">
     <div class="section-header">
       <p class="section-eyebrow">Trip Calendar</p>
-      <h2 class="section-title">April <em>19-25</em></h2>
+      <h2 class="section-title">April <em>18-25</em></h2>
       <div class="section-rule"></div>
     </div>
 
     <div class="calendar-grid">
+      <div class="calendar-day wedding-day">
+        <div class="calendar-top">
+          <div class="day-tags">
+            <span class="day-tag wedding">Wedding Day</span>
+          </div>
+          <div class="calendar-date">18</div>
+          <div class="calendar-month">April</div>
+        </div>
+        <div class="event-stack">
+          <div class="wedding-fill">
+            <span class="event-title">Wedding Day</span>
+          </div>
+        </div>
+      </div>
       <div class="calendar-day">
         <div class="calendar-top">
           <div class="day-tags">
@@ -722,7 +781,7 @@
             <span class="event-title"><a href="https://maps.apple.com/?q=11348%20Locust%20Mountain%20Road%2C%20Mountainburg%2C%20AR%2072946" target="_blank" rel="noopener">Check out: Mountainburg</a></span>
           </div>
           <div class="event-block">
-            <span class="event-time">2:00-2:30 PM · 2:40-3:15 PM</span>
+            <span class="event-time">2:00-2:35 PM</span>
             <span class="event-title"><a href="https://maps.apple.com/?q=Palace%20Hotel%20and%20Bath%20House%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Palace Bath House</a></span>
           </div>
           <div class="event-block">
@@ -750,7 +809,7 @@
             <span class="event-title"><a href="https://maps.apple.com/?q=The%20Squatch%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Breakfast: The Squatch</a></span>
           </div>
           <div class="event-block">
-            <span class="event-title"><a href="https://maps.apple.com/?q=White%20River%2C%20Eureka%20Springs%2C%20AR" target="_blank" rel="noopener">Fishing on the White River</a></span>
+            <span class="event-title">Fishing on the White River</span>
           </div>
           <div class="event-block">
             <span class="event-title"><a href="https://maps.apple.com/?q=Pinky%20Swear%2C%20Rogers%2C%20AR" target="_blank" rel="noopener">Dinner + drinks: Pinky Swear</a></span>
